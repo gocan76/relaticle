@@ -450,7 +450,7 @@ it('creates all custom fields for the first team', function (): void {
         ->get()
         ->groupBy('entity_type');
 
-    expect($fields->get('company'))->toHaveCount(3)
+    expect($fields->get('company'))->toHaveCount(9)
         ->and($fields->get('people'))->toHaveCount(4)
         ->and($fields->get('opportunity'))->toHaveCount(3)
         ->and($fields->get('task'))->toHaveCount(4)

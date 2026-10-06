@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Support;
 
-final class EmailCampaignCriteria
+final readonly class EmailCampaignCriteria
 {
     /**
      * Normalise the flat campaign form fields into the filter shape that
