@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Middleware;
 
 use App\Models\Company;
+use App\Models\EmailCampaign;
+use App\Models\EmailCampaignRecipient;
 use App\Models\Note;
 use App\Models\Opportunity;
 use App\Models\People;
@@ -34,6 +36,8 @@ final readonly class ApplyTenantScopes
         Opportunity::addGlobalScope(new TeamScope);
         Task::addGlobalScope(new TeamScope);
         Note::addGlobalScope(new TeamScope);
+        EmailCampaign::addGlobalScope(new TeamScope);
+        EmailCampaignRecipient::addGlobalScope(new TeamScope);
 
         return $next($request);
     }

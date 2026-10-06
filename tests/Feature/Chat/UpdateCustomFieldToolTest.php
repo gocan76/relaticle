@@ -69,7 +69,7 @@ it('proposes renaming a custom field and updates name on approval', function ():
     $result = $tool->handle(new Request([
         'entity_type' => 'company',
         'code' => $this->field->code,
-        'name' => 'Sector',
+        'name' => 'Region',
     ]));
 
     $decoded = json_decode($result, true);
@@ -90,7 +90,7 @@ it('proposes renaming a custom field and updates name on approval', function ():
 
     $this->field->refresh();
 
-    expect($this->field->name)->toBe('Sector');
+    expect($this->field->name)->toBe('Region');
 });
 
 it('returns error and creates no proposal for non-owner', function (): void {
@@ -105,7 +105,7 @@ it('returns error and creates no proposal for non-owner', function (): void {
     $result = $tool->handle(new Request([
         'entity_type' => 'company',
         'code' => $this->field->code,
-        'name' => 'Sector',
+        'name' => 'Region',
     ]));
 
     $decoded = json_decode($result, true);
@@ -142,8 +142,8 @@ it('rejects renaming to a name that already exists on the entity at proposal tim
     CustomField::factory()->create([
         $tenantKey => $this->team->getKey(),
         'entity_type' => 'company',
-        'name' => 'Sector',
-        'code' => 'sector',
+        'name' => 'Region',
+        'code' => 'region',
         'type' => 'text',
     ]);
 
@@ -151,7 +151,7 @@ it('rejects renaming to a name that already exists on the entity at proposal tim
     $result = $tool->handle(new Request([
         'entity_type' => 'company',
         'code' => $this->field->code,
-        'name' => 'Sector',
+        'name' => 'Region',
     ]));
 
     $decoded = json_decode($result, true);
@@ -179,15 +179,15 @@ it('rejects approval when the new name was taken after the proposal', function (
     $tool->handle(new Request([
         'entity_type' => 'company',
         'code' => $this->field->code,
-        'name' => 'Sector',
+        'name' => 'Region',
     ]));
 
     $tenantKey = config('custom-fields.database.column_names.tenant_foreign_key');
     CustomField::factory()->create([
         $tenantKey => $this->team->getKey(),
         'entity_type' => 'company',
-        'name' => 'Sector',
-        'code' => 'sector',
+        'name' => 'Region',
+        'code' => 'region',
         'type' => 'text',
     ]);
 

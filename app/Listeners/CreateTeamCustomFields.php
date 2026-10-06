@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Listeners;
 
+use App\Actions\CustomFields\CreateDefaultCustomField;
 use App\Enums\CustomFields\CompanyField as CompanyCustomField;
 use App\Enums\CustomFields\NoteField as NoteCustomField;
 use App\Enums\CustomFields\OpportunityField as OpportunityCustomField;
@@ -20,12 +21,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\DB;
 use Laravel\Jetstream\Events\TeamCreated;
 use Laravel\Pennant\Feature;
-use Relaticle\CustomFields\Contracts\CustomsFieldsMigrators;
-use Relaticle\CustomFields\Data\CustomFieldData;
 use Relaticle\CustomFields\Data\CustomFieldOptionSettingsData;
-use Relaticle\CustomFields\Data\CustomFieldSectionData;
-use Relaticle\CustomFields\Data\CustomFieldSettingsData;
-use Relaticle\CustomFields\Enums\CustomFieldSectionType;
 use Relaticle\CustomFields\Models\CustomField;
 use Relaticle\CustomFields\Models\CustomFieldOption;
 use Relaticle\OnboardSeed\OnboardSeeder;
@@ -42,7 +38,7 @@ final readonly class CreateTeamCustomFields
     ];
 
     public function __construct(
-        private CustomsFieldsMigrators $migrator,
+        private CreateDefaultCustomField $createDefaultCustomField,
         private OnboardSeeder $onboardSeeder,
     ) {}
 
@@ -50,12 +46,12 @@ final readonly class CreateTeamCustomFields
     {
         $team = $event->team;
 
-        $this->migrator->setTenantId($team->id);
-
-        DB::transaction(function (): void {
+        DB::transaction(function () use ($team): void {
             foreach (self::MODEL_ENUM_MAP as $modelClass => $enumClass) {
                 foreach ($enumClass::cases() as $enum) {
-                    $this->createCustomField($modelClass, $enum);
+                    $customField = $this->createDefaultCustomField->execute((string) $team->getKey(), $modelClass, $enum);
+
+                    $this->applyColorsToOptions($customField, $enum);
                 }
             }
         });
@@ -72,44 +68,6 @@ final readonly class CreateTeamCustomFields
 
             $this->onboardSeeder->run($owner, $team, $fixtureSet);
         }
-    }
-
-    /** @param class-string $model */
-    private function createCustomField(string $model, CompanyCustomField|OpportunityCustomField|PeopleCustomField|TaskCustomField|NoteCustomField $enum): void
-    {
-        $fieldData = new CustomFieldData(
-            name: $enum->getDisplayName(),
-            code: $enum->value,
-            type: $enum->getFieldType(),
-            section: new CustomFieldSectionData(
-                name: 'General',
-                code: 'general',
-                type: CustomFieldSectionType::HEADLESS
-            ),
-            systemDefined: $enum->isSystemDefined(),
-            width: $enum->getWidth(),
-            settings: new CustomFieldSettingsData(
-                list_toggleable_hidden: $enum->isListToggleableHidden(),
-                enable_option_colors: $enum->hasColorOptions(),
-                allow_multiple: $enum->allowsMultipleValues(),
-                max_values: $enum->getMaxValues(),
-                unique_per_entity_type: $enum->isUniquePerEntityType(),
-            )
-        );
-
-        $migrator = $this->migrator->new(
-            model: $model,
-            fieldData: $fieldData
-        );
-
-        $options = $enum->getOptions();
-        if ($options !== null) {
-            $migrator->options($options);
-        }
-
-        $customField = $migrator->create();
-
-        $this->applyColorsToOptions($customField, $enum);
     }
 
     private function applyColorsToOptions(CustomField $customField, CompanyCustomField|OpportunityCustomField|PeopleCustomField|TaskCustomField|NoteCustomField $enum): void
