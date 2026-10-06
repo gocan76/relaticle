@@ -12,6 +12,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Laravel\Jetstream\TeamInvitation as JetstreamTeamInvitation;
 
+/**
+ * @property string $email
+ * @property string|null $role
+ * @property Carbon|null $expires_at
+ */
 #[Fillable([
     'email',
     'role',
