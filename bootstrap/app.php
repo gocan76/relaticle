@@ -8,6 +8,7 @@ use App\Http\Middleware\RedirectToPrimaryHost;
 use App\Http\Middleware\SetApiTeamContext;
 use App\Http\Middleware\SubdomainRootResponse;
 use App\Http\Middleware\ValidateSignature;
+use App\Jobs\ProcessScheduledCampaigns;
 use App\Models\TeamInvitation;
 use App\Models\User;
 use Filament\Facades\Filament;
@@ -175,6 +176,7 @@ return Application::configure(basePath: dirname(__DIR__))
             ->onOneServer();
         $schedule->command('app:purge-scheduled-deletions')->daily()->withoutOverlapping()->onOneServer();
         $schedule->command('notifications:send-task-digest')->hourly()->withoutOverlapping()->onOneServer();
+        $schedule->job(new ProcessScheduledCampaigns)->everyMinute()->withoutOverlapping()->onOneServer();
 
         if (config('app.health_checks_enabled')) {
             $schedule->command(RunHealthChecksCommand::class)->everyMinute();
