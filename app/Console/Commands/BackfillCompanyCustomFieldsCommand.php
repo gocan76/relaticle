@@ -78,7 +78,9 @@ final class BackfillCompanyCustomFieldsCommand extends Command
                         continue;
                     }
 
-                    DB::transaction(fn () => $this->createDefaultCustomField->execute($teamId, Company::class, $enum));
+                    DB::transaction(function () use ($teamId, $enum): void {
+                        $this->createDefaultCustomField->execute($teamId, Company::class, $enum);
+                    });
 
                     $this->line("Created \"{$enum->value}\" for team {$teamId}");
                     $created++;
