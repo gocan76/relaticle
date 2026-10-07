@@ -59,6 +59,11 @@ final readonly class ResolveCampaignRecipients
 
         $email = $value?->getValue();
 
+        // The email field is multi-value, so getValue() returns a Collection of addresses.
+        if ($email instanceof Collection) {
+            $email = $email->first();
+        }
+
         return is_string($email) && $email !== '' ? $email : null;
     }
 }
