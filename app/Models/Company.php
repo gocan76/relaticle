@@ -36,6 +36,8 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @property string $name
  * @property Carbon|null $deleted_at
  * @property CreationSource $creation_source
+ * @property array<int, string>|null $documents
+ * @property array<string, string>|null $document_file_names
  * @property-read string $created_by
  */
 #[ObservedBy(CompanyObserver::class)]

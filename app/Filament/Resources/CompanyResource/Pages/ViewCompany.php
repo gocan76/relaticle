@@ -116,14 +116,16 @@ final class ViewCompany extends ViewRecord
                         TextEntry::make('documents')
                             ->label(__('filament/resources/company.fields.documents.label'))
                             ->html()
-                            ->formatStateUsing(function (?array $state, Company $record): string {
-                                if (blank($state)) {
+                            ->formatStateUsing(function (Company $record): string {
+                                $documents = $record->documents;
+
+                                if (! is_array($documents) || $documents === []) {
                                     return '—';
                                 }
 
-                                $names = $record->document_file_names ?? [];
+                                $names = is_array($record->document_file_names) ? $record->document_file_names : [];
 
-                                return collect($state)
+                                return collect($documents)
                                     ->map(fn (string $path): string => sprintf(
                                         '<a href="%s" target="_blank" rel="noopener">%s</a>',
                                         e(Storage::disk('public')->url($path)),
