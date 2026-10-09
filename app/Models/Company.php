@@ -42,6 +42,8 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 #[Fillable([
     'name',
     'creation_source',
+    'documents',
+    'document_file_names',
 ])]
 final class Company extends Model implements HasCustomFields, HasMedia, HasTimeline
 {
@@ -78,6 +80,8 @@ final class Company extends Model implements HasCustomFields, HasMedia, HasTimel
     {
         return [
             'creation_source' => CreationSource::class,
+            'documents' => 'array',
+            'document_file_names' => 'array',
         ];
     }
 

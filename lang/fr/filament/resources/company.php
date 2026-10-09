@@ -36,6 +36,9 @@ return [
         'deleted_at' => [
             'label' => 'Supprimé le',
         ],
+        'documents' => [
+            'label' => 'Documents',
+        ],
     ],
 
     'pages' => [
@@ -78,6 +81,11 @@ return [
                     'updated_at' => [
                         'label' => 'Dernière mise à jour',
                     ],
+                ],
+            ],
+            'sections' => [
+                'documents' => [
+                    'label' => 'Documents',
                 ],
             ],
         ],

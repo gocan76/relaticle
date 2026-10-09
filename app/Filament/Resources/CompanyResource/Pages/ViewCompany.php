@@ -19,6 +19,7 @@ use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Components\Flex;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Js;
 use Relaticle\ActivityLog\Filament\RelationManagers\ActivityLogRelationManager;
 use Relaticle\CustomFields\Facades\CustomFields;
@@ -109,6 +110,30 @@ final class ViewCompany extends ViewRecord
                             ->dateTime(),
                     ])->grow(false),
                 ])->columnSpan('full'),
+
+                Section::make(__('filament/resources/company.pages.view.sections.documents.label'))
+                    ->schema([
+                        TextEntry::make('documents')
+                            ->label(__('filament/resources/company.fields.documents.label'))
+                            ->html()
+                            ->formatStateUsing(function (?array $state, Company $record): string {
+                                if (blank($state)) {
+                                    return '—';
+                                }
+
+                                $names = $record->document_file_names ?? [];
+
+                                return collect($state)
+                                    ->map(fn (string $path): string => sprintf(
+                                        '<a href="%s" target="_blank" rel="noopener">%s</a>',
+                                        e(Storage::disk('public')->url($path)),
+                                        e($names[$path] ?? basename($path)),
+                                    ))
+                                    ->implode('<br>');
+                            })
+                            ->columnSpanFull(),
+                    ])
+                    ->columnSpanFull(),
             ]);
     }
 

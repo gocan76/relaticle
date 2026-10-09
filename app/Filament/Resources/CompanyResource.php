@@ -21,6 +21,7 @@ use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -51,10 +52,36 @@ final class CompanyResource extends Resource
                 TeamMemberSelect::make('account_owner_id')
                     ->relationship('accountOwner', 'name')
                     ->label(__('filament/resources/company.fields.account_owner_id.label'))
-                    ->default(fn (): ?string => auth()->user()?->id)
+                    ->default(function (): ?string {
+                        $id = auth()->user()?->id;
+
+                        return $id === null ? null : (string) $id;
+                    })
                     ->nullable(),
 
                 CustomFields::form()->build()->columnSpanFull()->columns(1),
+
+                FileUpload::make('documents')
+                    ->label(__('filament/resources/company.fields.documents.label'))
+                    ->disk('public')
+                    ->directory('company-documents')
+                    ->multiple()
+                    ->reorderable()
+                    ->acceptedFileTypes([
+                        'application/pdf',
+                        'application/msword',
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        'application/vnd.ms-excel',
+                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                        'text/plain',
+                        'image/png',
+                        'image/jpeg',
+                        'image/webp',
+                        'application/zip',
+                    ])
+                    ->maxSize(20480)
+                    ->storeFileNamesIn('document_file_names')
+                    ->columnSpanFull(),
             ]);
     }
 
