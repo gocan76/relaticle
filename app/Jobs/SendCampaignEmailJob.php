@@ -7,6 +7,7 @@ namespace App\Jobs;
 use App\Enums\EmailCampaignRecipientStatus;
 use App\Mail\CampaignEmail;
 use App\Models\EmailCampaignRecipient;
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -16,7 +17,7 @@ use Throwable;
 
 final class SendCampaignEmailJob implements ShouldQueue
 {
-    use Dispatchable, Queueable, SerializesModels;
+    use Batchable, Dispatchable, Queueable, SerializesModels;
 
     public function __construct(public string $recipientId) {}
 

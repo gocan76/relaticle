@@ -7,14 +7,13 @@ namespace App\Mail;
 use App\Models\EmailCampaign;
 use App\Models\EmailCampaignRecipient;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-final class CampaignEmail extends Mailable implements ShouldQueue
+final class CampaignEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
