@@ -10,6 +10,7 @@ use App\Models\EmailCampaignRecipient;
 use App\Models\Note;
 use App\Models\Opportunity;
 use App\Models\People;
+use App\Models\Quotation;
 use App\Models\Scopes\TeamScope;
 use App\Models\Task;
 use App\Models\User;
@@ -38,6 +39,7 @@ final readonly class ApplyTenantScopes
         Note::addGlobalScope(new TeamScope);
         EmailCampaign::addGlobalScope(new TeamScope);
         EmailCampaignRecipient::addGlobalScope(new TeamScope);
+        Quotation::addGlobalScope(new TeamScope);
 
         return $next($request);
     }
