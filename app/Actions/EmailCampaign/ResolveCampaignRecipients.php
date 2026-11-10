@@ -6,8 +6,8 @@ namespace App\Actions\EmailCampaign;
 
 use App\Actions\Company\ListCompanies;
 use App\Models\Company;
-use App\Models\CustomFieldValue;
 use App\Models\User;
+use App\Support\CompanyEmailResolver;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use LogicException;
@@ -43,27 +43,11 @@ final readonly class ResolveCampaignRecipients
 
             $recipients[] = [
                 'company' => $company,
-                'email' => $this->resolveEmail($company),
+                'email' => CompanyEmailResolver::resolve($company),
             ];
         }
 
         // @phpstan-ignore return.type (declared and inferred types are identical; flagged only because Larastan stubs Collection's TValue as invariant)
         return collect($recipients);
-    }
-
-    private function resolveEmail(Company $company): ?string
-    {
-        $value = $company->customFieldValues
-            ->firstWhere(fn (CustomFieldValue $fieldValue): bool => isset($fieldValue->getRelations()['customField'])
-                && $fieldValue->customField->code === 'email');
-
-        $email = $value?->getValue();
-
-        // The email field is multi-value, so getValue() returns a Collection of addresses.
-        if ($email instanceof Collection) {
-            $email = $email->first();
-        }
-
-        return is_string($email) && $email !== '' ? $email : null;
     }
 }

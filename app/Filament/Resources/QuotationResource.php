@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Actions\Quotation\SendQuotation;
 use App\Actions\Quotation\UpdateQuotation;
 use App\Enums\QuotationArea;
 use App\Enums\QuotationStatus;
@@ -11,6 +12,7 @@ use App\Filament\Resources\QuotationResource\Pages\ListQuotations;
 use App\Filament\Resources\QuotationResource\Pages\ViewQuotation;
 use App\Models\Quotation;
 use App\Models\User;
+use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -114,6 +116,7 @@ final class QuotationResource extends Resource
                 ActionGroup::make([
                     ViewAction::make(),
                     self::editAction(),
+                    self::sendAction(),
                     DeleteAction::make(),
                 ]),
             ])
@@ -132,6 +135,27 @@ final class QuotationResource extends Resource
                 $user = auth()->user();
 
                 return resolve(UpdateQuotation::class)->execute($user, $record, $data);
+            });
+    }
+
+    public static function sendAction(): Action
+    {
+        return Action::make('send')
+            ->label(__('filament/resources/quotation.actions.send.label'))
+            ->icon('heroicon-o-paper-airplane')
+            ->color('primary')
+            ->visible(fn (Quotation $record): bool => $record->status === QuotationStatus::Draft)
+            ->requiresConfirmation()
+            ->modalHeading(__('filament/resources/quotation.actions.send.confirm_heading'))
+            ->modalDescription(fn (Quotation $record): string => __('filament/resources/quotation.actions.send.confirm_description', [
+                'company' => $record->company?->name ?? '',
+            ]))
+            ->successNotificationTitle(__('filament/resources/quotation.actions.send.success'))
+            ->action(function (Quotation $record): void {
+                /** @var User $user */
+                $user = auth()->user();
+
+                resolve(SendQuotation::class)->execute($user, $record);
             });
     }
 

@@ -19,6 +19,7 @@ use Illuminate\Support\Carbon;
  * @property QuotationStatus $status
  * @property Carbon|null $issued_at
  * @property Carbon|null $valid_until
+ * @property Carbon|null $sent_at
  * @property-read float $total_amount
  */
 #[Fillable([
@@ -28,6 +29,7 @@ use Illuminate\Support\Carbon;
     'issued_at',
     'valid_until',
     'notes',
+    'sent_at',
     'fornitura_amount',
     'produzione_amount',
     'installazione_amount',
@@ -49,6 +51,7 @@ final class Quotation extends Model
             'status' => QuotationStatus::class,
             'issued_at' => 'date',
             'valid_until' => 'date',
+            'sent_at' => 'datetime',
             'fornitura_amount' => 'decimal:2',
             'produzione_amount' => 'decimal:2',
             'installazione_amount' => 'decimal:2',

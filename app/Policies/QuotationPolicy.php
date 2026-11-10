@@ -41,4 +41,9 @@ final readonly class QuotationPolicy
     {
         return $user->hasVerifiedEmail() && $user->currentTeam !== null;
     }
+
+    public function send(User $user, Quotation $quotation): bool
+    {
+        return $user->belongsToTeamId($quotation->team_id);
+    }
 }

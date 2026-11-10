@@ -24,6 +24,7 @@ final class ViewQuotation extends ViewRecord
             QuotationResource::editAction()
                 ->icon('heroicon-o-pencil-square')
                 ->label(__('filament/resources/quotation.pages.view.actions.edit.label')),
+            QuotationResource::sendAction(),
             DeleteAction::make(),
         ];
     }

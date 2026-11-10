@@ -53,6 +53,18 @@ return [
         ],
     ],
 
+    'actions' => [
+        'send' => [
+            'label' => 'Send',
+            'confirm_heading' => 'Send this quotation?',
+            'confirm_description' => 'The quotation will be sent to :company as a PDF attachment.',
+            'success' => 'Quotation sent.',
+            'email_subject' => 'Quotation :number',
+            'mail_intro' => 'Please find attached quotation :number.',
+            'no_email' => 'This company has no email address on file.',
+        ],
+    ],
+
     'pages' => [
         'view' => [
             'actions' => [

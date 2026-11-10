@@ -52,6 +52,18 @@ return [
         ],
     ],
 
+    'actions' => [
+        'send' => [
+            'label' => 'Envoyer',
+            'confirm_heading' => 'Envoyer ce devis ?',
+            'confirm_description' => 'Le devis sera envoyé à :company en pièce jointe PDF.',
+            'success' => 'Devis envoyé.',
+            'email_subject' => 'Devis :number',
+            'mail_intro' => 'Veuillez trouver ci-joint le devis :number.',
+            'no_email' => 'Cette entreprise n\'a pas d\'adresse email enregistrée.',
+        ],
+    ],
+
     'pages' => [
         'view' => [
             'actions' => [
