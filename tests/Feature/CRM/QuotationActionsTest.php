@@ -20,8 +20,8 @@ test('store quotation generates a number and assigns the team', function (): voi
         'company_id' => $company->getKey(),
         'status' => QuotationStatus::Draft,
         'fornitura_items' => [
-            ['description' => 'Pannelli', 'unit' => 'm2', 'quantity' => '10', 'unit_price' => 20],
-            ['description' => 'Guide', 'unit' => 'm', 'quantity' => '5', 'unit_price' => 10],
+            ['description' => 'Pannelli', 'unit' => 'pz', 'quantity' => '10', 'unit_price' => 20],
+            ['description' => 'Guide', 'unit' => 'pz', 'quantity' => '5', 'unit_price' => 10],
         ],
         'installazione_amount' => 300,
         'trasferta_amount' => 0,
@@ -57,7 +57,7 @@ test('update quotation changes items and status', function (): void {
         'company_id' => $company->getKey(),
         'status' => QuotationStatus::Sent,
         'fornitura_items' => [
-            ['description' => 'Viti', 'unit' => 'm', 'quantity' => '100', 'unit_price' => 0.5],
+            ['description' => 'Viti', 'unit' => 'pz', 'quantity' => '100', 'unit_price' => 0.5],
         ],
     ]);
 

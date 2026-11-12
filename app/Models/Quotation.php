@@ -75,7 +75,7 @@ final class Quotation extends Model
     public function getFornituraAmountAttribute(): float
     {
         return round(array_sum(array_map(
-            fn (array $item): float => $this->parseDecimal($item['quantity'] ?? null)
+            fn (array $item): float => $this->parseQuantity($item['quantity'] ?? null)
                 * $this->parseDecimal($item['unit_price'] ?? null),
             $this->fornitura_items ?? [],
         )), 2);
@@ -117,7 +117,7 @@ final class Quotation extends Model
                 'unit_label' => QuotationItemUnit::tryFrom((string) $unit)?->getLabel() ?? $unit,
                 'quantity' => (string) ($item['quantity'] ?? ''),
                 'unit_price' => $unitPrice,
-                'line_total' => round($this->parseDecimal($item['quantity'] ?? null) * $unitPrice, 2),
+                'line_total' => round($this->parseQuantity($item['quantity'] ?? null) * $unitPrice, 2),
             ];
         }, $this->fornitura_items ?? []);
     }
@@ -131,5 +131,14 @@ final class Quotation extends Model
         $normalized = str_replace(',', '.', (string) $value);
 
         return is_numeric($normalized) ? (float) $normalized : 0.0;
+    }
+
+    private function parseQuantity(mixed $value): float
+    {
+        if ($value === null || $value === '') {
+            return 1.0;
+        }
+
+        return $this->parseDecimal($value);
     }
 }

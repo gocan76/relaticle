@@ -8,14 +8,18 @@ use Filament\Support\Contracts\HasLabel;
 
 enum QuotationItemUnit: string implements HasLabel
 {
-    case Linear = 'm';
-    case Square = 'm2';
+    case Meter = 'm';
+
+    case SquareMeter = 'm2';
+
+    case Piece = 'pz';
 
     public function getLabel(): string
     {
         return match ($this) {
-            self::Linear => 'm',
-            self::Square => 'm²',
+            self::Meter => 'm',
+            self::SquareMeter => 'm²',
+            self::Piece => 'n. pz.',
         };
     }
 }

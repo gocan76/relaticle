@@ -29,21 +29,32 @@ test('quotation belongs to company', function () {
         ->and($quotation->company->getKey())->toBe($company->getKey());
 });
 
-test('fornitura amount sums quantity by unit price', function () {
+test('fornitura amount multiplies pieces by unit price', function () {
     $quotation = Quotation::factory()->create([
         'fornitura_items' => [
-            ['description' => 'Pannelli', 'unit' => 'm2', 'quantity' => '10', 'unit_price' => 20],
-            ['description' => 'Guide', 'unit' => 'm', 'quantity' => '5', 'unit_price' => 10.5],
+            ['description' => 'Pannelli', 'unit' => 'pz', 'quantity' => '10', 'unit_price' => 20],
+            ['description' => 'Guide', 'unit' => 'pz', 'quantity' => '5', 'unit_price' => 10.5],
         ],
     ]);
 
     expect($quotation->fornitura_amount)->toBe(252.5);
 });
 
+test('fornitura amount treats meter items as a single price', function () {
+    $quotation = Quotation::factory()->create([
+        'fornitura_items' => [
+            ['description' => 'Posa', 'unit' => 'm', 'unit_price' => 40],
+            ['description' => 'Verniciatura', 'unit' => 'm2', 'unit_price' => 15.5],
+        ],
+    ]);
+
+    expect($quotation->fornitura_amount)->toBe(55.5);
+});
+
 test('quotation total sums fornitura and areas plus 22% VAT', function () {
     $quotation = Quotation::factory()->create([
         'fornitura_items' => [
-            ['description' => 'Pannelli', 'unit' => 'm2', 'quantity' => '10', 'unit_price' => 20],
+            ['description' => 'Pannelli', 'unit' => 'pz', 'quantity' => '10', 'unit_price' => 20],
         ],
         'installazione_amount' => 300,
         'trasferta_amount' => 0,
@@ -58,18 +69,27 @@ test('quotation total sums fornitura and areas plus 22% VAT', function () {
 test('fornitura items expose line totals', function () {
     $quotation = Quotation::factory()->create([
         'fornitura_items' => [
-            ['description' => 'Pannelli', 'unit' => 'm2', 'quantity' => '10', 'unit_price' => 20],
+            ['description' => 'Pannelli', 'unit' => 'pz', 'quantity' => '10', 'unit_price' => 20],
+            ['description' => 'Posa', 'unit' => 'm', 'unit_price' => 40],
         ],
     ]);
 
     expect($quotation->fornitura_items_with_totals)->toBe([
         [
             'description' => 'Pannelli',
-            'unit' => 'm2',
-            'unit_label' => 'm²',
+            'unit' => 'pz',
+            'unit_label' => 'n. pz.',
             'quantity' => '10',
             'unit_price' => 20.0,
             'line_total' => 200.0,
+        ],
+        [
+            'description' => 'Posa',
+            'unit' => 'm',
+            'unit_label' => 'm',
+            'quantity' => '',
+            'unit_price' => 40.0,
+            'line_total' => 40.0,
         ],
     ]);
 });

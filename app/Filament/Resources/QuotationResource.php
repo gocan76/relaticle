@@ -27,6 +27,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -206,12 +207,19 @@ final class QuotationResource extends Resource
                 Select::make('unit')
                     ->label(__('filament/resources/quotation.fields.fornitura.unit'))
                     ->options(QuotationItemUnit::class)
-                    ->required(),
+                    ->required()
+                    ->live(),
                 TextInput::make('quantity')
                     ->label(__('filament/resources/quotation.fields.fornitura.quantity'))
-                    ->required(),
+                    ->required(fn (Get $get): bool => $get('unit') === QuotationItemUnit::Piece->value)
+                    ->dehydratedWhenHidden(false)
+                    ->visible(fn (Get $get): bool => $get('unit') === QuotationItemUnit::Piece->value),
                 TextInput::make('unit_price')
-                    ->label(__('filament/resources/quotation.fields.fornitura.unit_price'))
+                    ->label(fn (Get $get): string => match ($get('unit')) {
+                        QuotationItemUnit::Meter->value => __('filament/resources/quotation.fields.fornitura.price_per_meter'),
+                        QuotationItemUnit::SquareMeter->value => __('filament/resources/quotation.fields.fornitura.price_per_square_meter'),
+                        default => __('filament/resources/quotation.fields.fornitura.unit_price'),
+                    })
                     ->numeric()
                     ->prefix('€')
                     ->required(),
