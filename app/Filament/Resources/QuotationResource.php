@@ -210,10 +210,12 @@ final class QuotationResource extends Resource
                     ->required()
                     ->live(),
                 TextInput::make('quantity')
-                    ->label(__('filament/resources/quotation.fields.fornitura.quantity'))
-                    ->required(fn (Get $get): bool => $get('unit') === QuotationItemUnit::Piece)
-                    ->dehydratedWhenHidden(false)
-                    ->visible(fn (Get $get): bool => $get('unit') === QuotationItemUnit::Piece),
+                    ->label(fn (Get $get): string => match ($get('unit')) {
+                        QuotationItemUnit::Meter => __('filament/resources/quotation.fields.fornitura.quantity_per_meter'),
+                        QuotationItemUnit::SquareMeter => __('filament/resources/quotation.fields.fornitura.quantity_per_square_meter'),
+                        default => __('filament/resources/quotation.fields.fornitura.quantity'),
+                    })
+                    ->required(),
                 TextInput::make('unit_price')
                     ->label(fn (Get $get): string => match ($get('unit')) {
                         QuotationItemUnit::Meter => __('filament/resources/quotation.fields.fornitura.price_per_meter'),

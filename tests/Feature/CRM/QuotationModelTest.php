@@ -40,15 +40,15 @@ test('fornitura amount multiplies pieces by unit price', function () {
     expect($quotation->fornitura_amount)->toBe(252.5);
 });
 
-test('fornitura amount treats meter items as a single price', function () {
+test('fornitura amount multiplies meter quantity by price', function () {
     $quotation = Quotation::factory()->create([
         'fornitura_items' => [
-            ['description' => 'Posa', 'unit' => 'm', 'unit_price' => 40],
-            ['description' => 'Verniciatura', 'unit' => 'm2', 'unit_price' => 15.5],
+            ['description' => 'Posa', 'unit' => 'm', 'quantity' => '3', 'unit_price' => 40],
+            ['description' => 'Verniciatura', 'unit' => 'm2', 'quantity' => '2', 'unit_price' => 15.5],
         ],
     ]);
 
-    expect($quotation->fornitura_amount)->toBe(55.5);
+    expect($quotation->fornitura_amount)->toBe(151.0);
 });
 
 test('quotation total sums fornitura and areas plus 22% VAT', function () {
@@ -87,9 +87,9 @@ test('fornitura items expose line totals', function () {
             'description' => 'Posa',
             'unit' => 'm',
             'unit_label' => 'm',
-            'quantity' => '',
+            'quantity' => '3',
             'unit_price' => 40.0,
-            'line_total' => 40.0,
+            'line_total' => 120.0,
         ],
     ]);
 });

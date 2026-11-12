@@ -62,6 +62,8 @@ return [
             'description' => 'Description',
             'unit' => 'Unit',
             'quantity' => 'Quantity',
+            'quantity_per_meter' => 'Quantity (m)',
+            'quantity_per_square_meter' => 'Quantity (m²)',
             'unit_price' => 'Unit price',
             'price_per_meter' => 'Price per meter',
             'price_per_square_meter' => 'Price per m²',
