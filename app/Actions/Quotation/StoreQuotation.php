@@ -24,8 +24,7 @@ final readonly class StoreQuotation
 
         $attributes = Arr::only($data, [
             'company_id', 'status', 'issued_at', 'valid_until', 'notes',
-            'fornitura_amount', 'produzione_amount', 'installazione_amount',
-            'trasferta_amount', 'trasporto_amount',
+            'fornitura_items', 'installazione_amount', 'trasferta_amount', 'trasporto_amount',
         ]);
         $attributes['team_id'] = $user->currentTeam->getKey();
         $attributes['number'] = 'Q-'.strtoupper(substr((string) Str::ulid(), 0, 8));

@@ -23,8 +23,7 @@ final readonly class UpdateQuotation
 
         $attributes = Arr::only($data, [
             'company_id', 'status', 'issued_at', 'valid_until', 'notes',
-            'fornitura_amount', 'produzione_amount', 'installazione_amount',
-            'trasferta_amount', 'trasporto_amount',
+            'fornitura_items', 'installazione_amount', 'trasferta_amount', 'trasporto_amount',
         ]);
 
         $quotation->update($attributes);

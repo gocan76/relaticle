@@ -7,7 +7,10 @@ namespace App\Filament\Resources\QuotationResource\Pages;
 use App\Enums\QuotationArea;
 use App\Enums\QuotationStatus;
 use App\Filament\Resources\QuotationResource;
+use App\Models\Quotation;
 use Filament\Actions\DeleteAction;
+use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Infolists\Components\RepeatableEntry\TableColumn;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Components\Section;
@@ -54,6 +57,34 @@ final class ViewQuotation extends ViewRecord
                 ])
                 ->columns(2),
 
+            Section::make(__('filament/resources/quotation.sections.fornitura.title'))
+                ->schema([
+                    RepeatableEntry::make('fornitura_items')
+                        ->state(fn (Quotation $record): array => $record->fornitura_items_with_totals)
+                        ->hiddenLabel()
+                        ->schema([
+                            TextEntry::make('description')
+                                ->hiddenLabel(),
+                            TextEntry::make('unit_label')
+                                ->hiddenLabel(),
+                            TextEntry::make('quantity')
+                                ->hiddenLabel(),
+                            TextEntry::make('unit_price')
+                                ->hiddenLabel()
+                                ->numeric(2),
+                            TextEntry::make('line_total')
+                                ->hiddenLabel()
+                                ->numeric(2),
+                        ])
+                        ->table([
+                            TableColumn::make(__('filament/resources/quotation.fields.fornitura.description')),
+                            TableColumn::make(__('filament/resources/quotation.fields.fornitura.unit')),
+                            TableColumn::make(__('filament/resources/quotation.fields.fornitura.quantity')),
+                            TableColumn::make(__('filament/resources/quotation.fields.fornitura.unit_price')),
+                            TableColumn::make(__('filament/resources/quotation.fields.total.label')),
+                        ]),
+                ]),
+
             Section::make(__('filament/resources/quotation.sections.areas.title'))
                 ->schema([
                     ...collect(QuotationArea::cases())
@@ -61,6 +92,12 @@ final class ViewQuotation extends ViewRecord
                             ->label($area->getLabel())
                             ->numeric(2))
                         ->all(),
+                    TextEntry::make('subtotal_amount')
+                        ->label(__('filament/resources/quotation.fields.subtotal.label'))
+                        ->numeric(2),
+                    TextEntry::make('iva_amount')
+                        ->label(__('filament/resources/quotation.fields.iva.label'))
+                        ->numeric(2),
                     TextEntry::make('total_amount')
                         ->label(__('filament/resources/quotation.fields.total.label'))
                         ->numeric(2)

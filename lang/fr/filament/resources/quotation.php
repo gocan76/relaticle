@@ -12,14 +12,15 @@ return [
         'header' => [
             'title' => 'En-tête',
         ],
+        'fornitura' => [
+            'title' => 'Fourniture',
+        ],
         'areas' => [
             'title' => 'Zones du devis',
         ],
     ],
 
     'areas' => [
-        'fornitura' => 'Fourniture',
-        'produzione' => 'Production',
         'installazione' => 'Installation',
         'trasferta' => 'Déplacement',
         'trasporto' => 'Transport',
@@ -44,15 +45,28 @@ return [
         'notes' => [
             'label' => 'Notes',
         ],
+        'subtotal' => [
+            'label' => 'Sous-total',
+        ],
+        'iva' => [
+            'label' => 'TVA (22 %)',
+        ],
         'total' => [
             'label' => 'Total',
         ],
         'created_at' => [
             'label' => 'Créé le',
         ],
+        'fornitura' => [
+            'description' => 'Description',
+            'unit' => 'Unité',
+            'quantity' => 'Quantité',
+            'unit_price' => 'Prix unitaire',
+        ],
     ],
 
     'actions' => [
+        'add_fornitura_item' => 'Ajouter une ligne',
         'send' => [
             'label' => 'Envoyer',
             'confirm_heading' => 'Envoyer ce devis ?',

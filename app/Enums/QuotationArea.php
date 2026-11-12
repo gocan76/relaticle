@@ -8,8 +8,6 @@ use Filament\Support\Contracts\HasLabel;
 
 enum QuotationArea: string implements HasLabel
 {
-    case Fornitura = 'fornitura';
-    case Produzione = 'produzione';
     case Installazione = 'installazione';
     case Trasferta = 'trasferta';
     case Trasporto = 'trasporto';

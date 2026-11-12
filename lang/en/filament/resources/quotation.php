@@ -13,14 +13,15 @@ return [
         'header' => [
             'title' => 'Header',
         ],
+        'fornitura' => [
+            'title' => 'Fornitura',
+        ],
         'areas' => [
             'title' => 'Quotation Areas',
         ],
     ],
 
     'areas' => [
-        'fornitura' => 'Fornitura',
-        'produzione' => 'Produzione',
         'installazione' => 'Installazione',
         'trasferta' => 'Trasferta',
         'trasporto' => 'Trasporto',
@@ -45,15 +46,28 @@ return [
         'notes' => [
             'label' => 'Notes',
         ],
+        'subtotal' => [
+            'label' => 'Subtotal',
+        ],
+        'iva' => [
+            'label' => 'VAT (22%)',
+        ],
         'total' => [
             'label' => 'Total',
         ],
         'created_at' => [
             'label' => 'Created at',
         ],
+        'fornitura' => [
+            'description' => 'Description',
+            'unit' => 'Unit',
+            'quantity' => 'Quantity',
+            'unit_price' => 'Unit price',
+        ],
     ],
 
     'actions' => [
+        'add_fornitura_item' => 'Add item',
         'send' => [
             'label' => 'Send',
             'confirm_heading' => 'Send this quotation?',

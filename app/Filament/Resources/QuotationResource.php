@@ -7,6 +7,7 @@ namespace App\Filament\Resources;
 use App\Actions\Quotation\SendQuotation;
 use App\Actions\Quotation\UpdateQuotation;
 use App\Enums\QuotationArea;
+use App\Enums\QuotationItemUnit;
 use App\Enums\QuotationStatus;
 use App\Filament\Resources\QuotationResource\Pages\ListQuotations;
 use App\Filament\Resources\QuotationResource\Pages\ViewQuotation;
@@ -20,6 +21,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -70,6 +72,11 @@ final class QuotationResource extends Resource
                         ->columnSpanFull(),
                 ])
                 ->columns(2),
+
+            Section::make(__('filament/resources/quotation.sections.fornitura.title'))
+                ->schema([
+                    self::fornituraRepeater(),
+                ]),
 
             Section::make(__('filament/resources/quotation.sections.areas.title'))
                 ->schema(self::areaFields())
@@ -185,6 +192,34 @@ final class QuotationResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()->with('company');
+    }
+
+    private static function fornituraRepeater(): Repeater
+    {
+        return Repeater::make('fornitura_items')
+            ->hiddenLabel()
+            ->schema([
+                TextInput::make('description')
+                    ->label(__('filament/resources/quotation.fields.fornitura.description'))
+                    ->required()
+                    ->columnSpanFull(),
+                Select::make('unit')
+                    ->label(__('filament/resources/quotation.fields.fornitura.unit'))
+                    ->options(QuotationItemUnit::class)
+                    ->required(),
+                TextInput::make('quantity')
+                    ->label(__('filament/resources/quotation.fields.fornitura.quantity'))
+                    ->required(),
+                TextInput::make('unit_price')
+                    ->label(__('filament/resources/quotation.fields.fornitura.unit_price'))
+                    ->numeric()
+                    ->prefix('€')
+                    ->required(),
+            ])
+            ->columns(3)
+            ->addActionLabel(__('filament/resources/quotation.actions.add_fornitura_item'))
+            ->reorderable()
+            ->collapsible();
     }
 
     /**

@@ -29,16 +29,49 @@ test('quotation belongs to company', function () {
         ->and($quotation->company->getKey())->toBe($company->getKey());
 });
 
-test('quotation total sums all areas', function () {
+test('fornitura amount sums quantity by unit price', function () {
     $quotation = Quotation::factory()->create([
-        'fornitura_amount' => 100,
-        'produzione_amount' => 200.5,
-        'installazione_amount' => 300,
-        'trasferta_amount' => 50.25,
-        'trasporto_amount' => 75,
+        'fornitura_items' => [
+            ['description' => 'Pannelli', 'unit' => 'm2', 'quantity' => '10', 'unit_price' => 20],
+            ['description' => 'Guide', 'unit' => 'm', 'quantity' => '5', 'unit_price' => 10.5],
+        ],
     ]);
 
-    expect($quotation->total_amount)->toBe(725.75);
+    expect($quotation->fornitura_amount)->toBe(252.5);
+});
+
+test('quotation total sums fornitura and areas plus 22% VAT', function () {
+    $quotation = Quotation::factory()->create([
+        'fornitura_items' => [
+            ['description' => 'Pannelli', 'unit' => 'm2', 'quantity' => '10', 'unit_price' => 20],
+        ],
+        'installazione_amount' => 300,
+        'trasferta_amount' => 0,
+        'trasporto_amount' => 0,
+    ]);
+
+    expect($quotation->subtotal_amount)->toBe(500.0)
+        ->and($quotation->iva_amount)->toBe(110.0)
+        ->and($quotation->total_amount)->toBe(610.0);
+});
+
+test('fornitura items expose line totals', function () {
+    $quotation = Quotation::factory()->create([
+        'fornitura_items' => [
+            ['description' => 'Pannelli', 'unit' => 'm2', 'quantity' => '10', 'unit_price' => 20],
+        ],
+    ]);
+
+    expect($quotation->fornitura_items_with_totals)->toBe([
+        [
+            'description' => 'Pannelli',
+            'unit' => 'm2',
+            'unit_label' => 'm²',
+            'quantity' => '10',
+            'unit_price' => 20.0,
+            'line_total' => 200.0,
+        ],
+    ]);
 });
 
 test('quotation status is cast to enum', function () {
