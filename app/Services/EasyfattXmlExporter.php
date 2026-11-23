@@ -56,6 +56,8 @@ final readonly class EasyfattXmlExporter
             $this->append($dom, $element, 'CustomerVatCode', $company->partita_iva);
         }
 
+        $this->append($dom, $element, 'PaymentName', $quotation->payment_name);
+
         $this->append($dom, $element, 'TotalWithoutTax', $this->amount($quotation->subtotal_amount));
         $this->append($dom, $element, 'VatAmount', $this->amount($quotation->iva_amount));
         $this->append($dom, $element, 'Total', $this->amount($quotation->total_amount));

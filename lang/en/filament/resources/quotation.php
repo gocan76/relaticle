@@ -46,6 +46,9 @@ return [
         'notes' => [
             'label' => 'Notes',
         ],
+        'payment_name' => [
+            'label' => 'Payment Method',
+        ],
         'subtotal' => [
             'label' => 'Subtotal',
         ],
@@ -74,6 +77,9 @@ return [
         'add_fornitura_item' => 'Add item',
         'export_easyfatt' => [
             'label' => 'Export Easyfatt-Xml',
+        ],
+        'preview' => [
+            'label' => 'Preview',
         ],
         'send' => [
             'label' => 'Send',

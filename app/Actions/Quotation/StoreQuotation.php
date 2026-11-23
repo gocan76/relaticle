@@ -23,7 +23,7 @@ final readonly class StoreQuotation
         TenantFkValidator::assertOwned($user, $data, ['company_id' => Company::class]);
 
         $attributes = Arr::only($data, [
-            'company_id', 'status', 'issued_at', 'valid_until', 'notes',
+            'company_id', 'status', 'issued_at', 'valid_until', 'notes', 'payment_name',
             'fornitura_items', 'installazione_amount', 'trasferta_amount', 'trasporto_amount',
         ]);
         $attributes['team_id'] = $user->currentTeam->getKey();

@@ -17,6 +17,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property QuotationStatus $status
+ * @property string|null $payment_name
  * @property Carbon|null $issued_at
  * @property Carbon|null $valid_until
  * @property Carbon|null $sent_at
@@ -33,6 +34,7 @@ use Illuminate\Support\Carbon;
     'issued_at',
     'valid_until',
     'notes',
+    'payment_name',
     'sent_at',
     'fornitura_items',
     'installazione_amount',

@@ -14,6 +14,7 @@ use App\Filament\Resources\QuotationResource\Pages\ViewQuotation;
 use App\Models\Quotation;
 use App\Models\User;
 use App\Services\EasyfattXmlExporter;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkAction;
@@ -69,6 +70,20 @@ final class QuotationResource extends Resource
                         ->options(QuotationStatus::class)
                         ->default(QuotationStatus::Draft)
                         ->required(),
+                    Select::make('payment_name')
+                        ->label(__('filament/resources/quotation.fields.payment_name.label'))
+                        ->options([
+                            'Bonifico bancario' => 'Bonifico bancario',
+                            'Contanti' => 'Contanti',
+                            'Rimessa diretta' => 'Rimessa diretta',
+                            'Ricevuta bancaria' => 'Ricevuta bancaria',
+                            'Assegno' => 'Assegno',
+                            'Carta di credito' => 'Carta di credito',
+                            'Bollettino postale' => 'Bollettino postale',
+                            'RID' => 'RID',
+                        ])
+                        ->searchable()
+                        ->nullable(),
                     DatePicker::make('issued_at')
                         ->label(__('filament/resources/quotation.fields.issued_at.label')),
                     DatePicker::make('valid_until')
@@ -126,11 +141,12 @@ final class QuotationResource extends Resource
                     ->options(QuotationStatus::class),
             ])
             ->recordActions([
+                self::previewAction(),
+                self::exportEasyfattAction(),
                 ActionGroup::make([
                     ViewAction::make(),
                     self::editAction(),
                     self::sendAction(),
-                    self::exportEasyfattAction(),
                     DeleteAction::make(),
                 ]),
             ])
@@ -174,11 +190,41 @@ final class QuotationResource extends Resource
             });
     }
 
+    public static function previewAction(): Action
+    {
+        return Action::make('preview')
+            ->label(__('filament/resources/quotation.actions.preview.label'))
+            ->icon('heroicon-o-eye')
+            ->tooltip(__('filament/resources/quotation.actions.preview.label'))
+            ->action(function (Quotation $record): StreamedResponse {
+                /** @var User $user */
+                $user = auth()->user();
+
+                abort_unless($user->can('view', $record), 403);
+
+                $pdf = Pdf::loadView('pdf.quotation', [
+                    'quotation' => $record->loadMissing('company'),
+                    'areas' => QuotationArea::cases(),
+                ])->output();
+
+                return response()->streamDownload(
+                    function () use ($pdf): void {
+                        echo $pdf;
+                    },
+                    'quotation-'.$record->number.'.pdf',
+                    ['Content-Type' => 'application/pdf'],
+                    'inline',
+                );
+            });
+    }
+
     public static function exportEasyfattAction(): Action
     {
         return Action::make('exportEasyfatt')
             ->label(__('filament/resources/quotation.actions.export_easyfatt.label'))
             ->icon('heroicon-o-arrow-down-tray')
+            ->color('success')
+            ->tooltip(__('filament/resources/quotation.actions.export_easyfatt.label'))
             ->action(function (Quotation $record): StreamedResponse {
                 $xml = resolve(EasyfattXmlExporter::class)->generate(collect([$record]));
 

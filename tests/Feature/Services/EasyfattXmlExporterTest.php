@@ -26,6 +26,7 @@ it('generates an Easyfatt preventivo document', function (): void {
     $quotation = Quotation::factory()->for($company)->for($this->team)->create([
         'number' => 'Q-0001',
         'issued_at' => '2026-11-23',
+        'payment_name' => 'Bonifico bancario',
         'fornitura_items' => [
             ['description' => 'Cavo elettrico', 'unit' => 'm', 'quantity' => '10', 'unit_price' => 2.5],
         ],
@@ -46,7 +47,8 @@ it('generates an Easyfatt preventivo document', function (): void {
         ->and((string) $document->CustomerCity)->toBe('Milano')
         ->and((string) $document->CustomerPostcode)->toBe('20100')
         ->and((string) $document->CustomerProvince)->toBe('MI')
-        ->and((string) $document->CustomerCountry)->toBe('Italia');
+        ->and((string) $document->CustomerCountry)->toBe('Italia')
+        ->and((string) $document->PaymentName)->toBe('Bonifico bancario');
 
     $rows = $document->Rows->Row;
 
@@ -100,5 +102,6 @@ it('omits empty customer fields and rows', function (): void {
 
     expect(isset($document->CustomerAddress))->toBeFalse()
         ->and(isset($document->CustomerVatCode))->toBeFalse()
+        ->and(isset($document->PaymentName))->toBeFalse()
         ->and(isset($document->Rows))->toBeFalse();
 });
