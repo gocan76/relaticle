@@ -12,6 +12,9 @@
         .areas th, .areas td, .fornitura th, .fornitura td { border-bottom: 1px solid #e5e7eb; }
         .amount { text-align: right; }
         .total td { font-weight: bold; border-top: 2px solid #111827; }
+        .terms { margin-top: 24px; font-size: 8px; line-height: 1.35; color: #4b5563; }
+        .terms p { margin: 0 0 4px; }
+        .terms strong { color: #111827; }
     </style>
 </head>
 <body>
@@ -83,5 +86,14 @@
     @if ($quotation->notes)
         <p>{{ $quotation->notes }}</p>
     @endif
+
+    <div class="terms">
+        <p><strong>Nota:</strong> Il presente preventivo include la presentazione di numero 2 proposte grafiche.</p>
+        <p><strong>Misure e Rilievi:</strong> Il preventivo è formulato sulle misure fornite dal cliente. Eventuali rilievi tecnici in loco, se richiesti, faranno fede per il conteggio definitivo dei materiali e della posa.</p>
+        <p><strong>Stato delle Superfici:</strong> Le superfici di applicazione devono presentarsi lisce, integre, asciutte e prive di vernici sfoglianti, siliconi o residui. È inclusa la sola sgrassatura pre-posa; la rimozione di vecchie pellicole o residui di colla sarà quantificata a parte. Non si risponde di distacchi dovuti all'inidoneità o al degrado del supporto.</p>
+        <p><strong>Logistica e Condizioni Meteo:</strong> Si presuppone un accesso libero e sicuro all'area di lavoro in orario diurno feriale. Eventuali noleggi di piattaforme aeree/trabattelli sono esclusi se non espressamente indicati. Per le pose in esterno, l'intervento è subordinato a condizioni meteo favorevoli (temperature tra +10°C e +30°C).</p>
+        <p><strong>Garanzia e Rimozione:</strong> La durata del materiale segue le specifiche del produttore per esposizione verticale. La futura rimozione su pareti verniciate o cartongesso può comportare il distacco della pittura sottostante, evento non imputabile al fornitore.</p>
+        <p><strong>Validità e Pagamenti:</strong> Offerta valida 30 giorni. Acconto del 50% all'accettazione, saldo a fine lavori.</p>
+    </div>
 </body>
 </html>
