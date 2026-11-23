@@ -35,6 +35,14 @@ use Spatie\Sluggable\SlugOptions;
 /**
  * @property string $name
  * @property string $slug
+ * @property string|null $partita_iva
+ * @property string|null $address
+ * @property string|null $city
+ * @property string|null $postal_code
+ * @property string|null $province
+ * @property string|null $country
+ * @property string|null $phone
+ * @property string|null $email
  * @property Plan $plan
  * @property ?string $invite_link_token
  * @property ?Carbon $invite_link_token_expires_at
@@ -55,6 +63,14 @@ use Spatie\Sluggable\SlugOptions;
     'name',
     'slug',
     'personal_team',
+    'partita_iva',
+    'address',
+    'city',
+    'postal_code',
+    'province',
+    'country',
+    'phone',
+    'email',
     'onboarding_use_case',
     'onboarding_context',
     'onboarding_referral_source',

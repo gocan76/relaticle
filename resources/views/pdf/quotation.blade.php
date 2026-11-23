@@ -15,9 +15,38 @@
         .terms { margin-top: 24px; font-size: 8px; line-height: 1.35; color: #4b5563; }
         .terms p { margin: 0 0 4px; }
         .terms strong { color: #111827; }
+        .sender { margin-bottom: 20px; font-size: 12px; line-height: 1.4; }
+        .sender strong { font-size: 14px; }
     </style>
 </head>
 <body>
+    <div class="sender">
+        <strong>{{ $quotation->team?->name }}</strong>
+        @if (filled($quotation->team?->address))
+            <br>{{ $quotation->team->address }}
+        @endif
+        @php
+            $teamLocality = trim(implode(' ', array_filter([
+                $quotation->team?->postal_code,
+                $quotation->team?->city,
+                $quotation->team?->province ? '('.$quotation->team->province.')' : null,
+                $quotation->team?->country,
+            ])));
+        @endphp
+        @if ($teamLocality !== '')
+            <br>{{ $teamLocality }}
+        @endif
+        @if (filled($quotation->team?->partita_iva))
+            <br>P.IVA {{ $quotation->team->partita_iva }}
+        @endif
+        @if (filled($quotation->team?->phone))
+            <br>Tel. {{ $quotation->team->phone }}
+        @endif
+        @if (filled($quotation->team?->email))
+            <br>{{ $quotation->team->email }}
+        @endif
+    </div>
+
     <h1>{{ __('filament/resources/quotation.sections.header.title') }} {{ $quotation->number }}</h1>
 
     <table class="header">

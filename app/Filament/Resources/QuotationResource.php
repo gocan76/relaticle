@@ -203,7 +203,7 @@ final class QuotationResource extends Resource
                 abort_unless($user->can('view', $record), 403);
 
                 $pdf = Pdf::loadView('pdf.quotation', [
-                    'quotation' => $record->loadMissing('company'),
+                    'quotation' => $record->loadMissing(['company', 'team']),
                     'areas' => QuotationArea::cases(),
                 ])->output();
 

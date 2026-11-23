@@ -24,7 +24,7 @@ final class SendQuotationEmailJob implements ShouldQueue
     public function handle(): void
     {
         $quotation = Quotation::query()
-            ->with('company')
+            ->with(['company', 'team'])
             ->find($this->quotationId);
 
         if ($quotation === null) {

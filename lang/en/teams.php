@@ -11,6 +11,27 @@ return [
             'label' => 'Workspace Slug',
             'helper_text' => 'Only lowercase letters, numbers, and hyphens. This appears in your workspace URL.',
         ],
+        'partita_iva' => [
+            'label' => 'VAT Number',
+        ],
+        'address' => [
+            'label' => 'Address',
+        ],
+        'city' => [
+            'label' => 'City',
+        ],
+        'postal_code' => [
+            'label' => 'Postal Code',
+        ],
+        'province' => [
+            'label' => 'Province',
+        ],
+        'country' => [
+            'label' => 'Country',
+        ],
+        'phone' => [
+            'label' => 'Phone',
+        ],
         'email' => [
             'label' => 'Email',
         ],
@@ -20,6 +41,10 @@ return [
         'update_team_name' => [
             'title' => 'Workspace Name',
             'description' => 'The workspace\'s name and owner information.',
+        ],
+        'workspace_profile' => [
+            'title' => 'Business Profile',
+            'description' => 'Your company\'s details, shown on quotations and documents.',
         ],
         'add_team_member' => [
             'title' => 'Add Member',
