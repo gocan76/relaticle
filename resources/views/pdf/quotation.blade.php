@@ -15,12 +15,12 @@
         .terms { margin-top: 24px; font-size: 8px; line-height: 1.35; color: #4b5563; }
         .terms p { margin: 0 0 4px; }
         .terms strong { color: #111827; }
-        .doc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+        .doc-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 16px; }
         .doc-info { font-size: 13px; line-height: 1.45; }
-        .doc-sender { display: flex; align-items: flex-start; gap: 16px; }
+        .doc-sender { display: flex; flex-direction: column; align-items: flex-end; }
         .sender-text { text-align: right; font-size: 13px; line-height: 1.45; }
         .sender-text .name { font-size: 26px; font-weight: bold; }
-        .logo { max-height: 70px; max-width: 160px; }
+        .logo { max-height: 70px; max-width: 160px; margin-bottom: 8px; }
     </style>
 </head>
 <body>
@@ -32,6 +32,18 @@
         </div>
 
         <div class="doc-sender">
+            @if (filled($quotation->team?->logo))
+                @php
+                    $logoPath = $quotation->team->logo;
+                    $logoData = null;
+                    if (\Storage::disk('public')->exists($logoPath)) {
+                        $logoData = 'data:'.(\Storage::disk('public')->mimeType($logoPath) ?: 'image/png').';base64,'.base64_encode(\Storage::disk('public')->get($logoPath));
+                    }
+                @endphp
+                @if ($logoData)
+                    <img src="{{ $logoData }}" class="logo" alt="">
+                @endif
+            @endif
             <div class="sender-text">
                 <div class="name">{{ $quotation->team?->name }}</div>
                 @php
@@ -45,11 +57,18 @@
                 @if ($teamAddress !== '')
                     <div>{{ $teamAddress }}</div>
                 @endif
-                @if (filled($quotation->team?->email))
-                    <div>{{ $quotation->team->email }}</div>
-                @endif
-                @if (filled($quotation->team?->pec))
-                    <div>{{ $quotation->team->pec }}</div>
+                @if (filled($quotation->team?->email) || filled($quotation->team?->pec))
+                    <div>
+                        @if (filled($quotation->team?->email))
+                            Email: {{ $quotation->team->email }}
+                        @endif
+                        @if (filled($quotation->team?->email) && filled($quotation->team?->pec))
+                            &nbsp;&nbsp;
+                        @endif
+                        @if (filled($quotation->team?->pec))
+                            PEC: {{ $quotation->team->pec }}
+                        @endif
+                    </div>
                 @endif
                 @if (filled($quotation->team?->phone))
                     <div>{{ $quotation->team->phone }}</div>
@@ -61,18 +80,6 @@
                     <div>REA {{ $quotation->team->rea }}</div>
                 @endif
             </div>
-            @if (filled($quotation->team?->logo))
-                @php
-                    $logoPath = $quotation->team->logo;
-                    $logoData = null;
-                    if (\Storage::disk('public')->exists($logoPath)) {
-                        $logoData = 'data:'.(\Storage::disk('public')->mimeType($logoPath) ?: 'image/png').';base64,'.base64_encode(\Storage::disk('public')->get($logoPath));
-                    }
-                @endphp
-                @if ($logoData)
-                    <img src="{{ $logoData }}" class="logo" alt="">
-                @endif
-            @endif
         </div>
     </div>
 
