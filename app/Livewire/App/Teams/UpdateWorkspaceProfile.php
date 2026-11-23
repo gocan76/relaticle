@@ -9,6 +9,7 @@ use App\Livewire\BaseLivewireComponent;
 use App\Models\Team;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use Filament\Actions\Action;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Section;
@@ -28,6 +29,7 @@ final class UpdateWorkspaceProfile extends BaseLivewireComponent
 
         $this->form->fill($team->only([
             'partita_iva',
+            'rea',
             'address',
             'city',
             'postal_code',
@@ -35,6 +37,8 @@ final class UpdateWorkspaceProfile extends BaseLivewireComponent
             'country',
             'phone',
             'email',
+            'pec',
+            'logo',
         ]));
     }
 
@@ -50,6 +54,10 @@ final class UpdateWorkspaceProfile extends BaseLivewireComponent
                             ->label(__('teams.form.partita_iva.label'))
                             ->string()
                             ->maxLength(20),
+                        TextInput::make('rea')
+                            ->label(__('teams.form.rea.label'))
+                            ->string()
+                            ->maxLength(50),
                         TextInput::make('address')
                             ->label(__('teams.form.address.label'))
                             ->string()
@@ -79,6 +87,18 @@ final class UpdateWorkspaceProfile extends BaseLivewireComponent
                             ->email()
                             ->nullable()
                             ->maxLength(255),
+                        TextInput::make('pec')
+                            ->label(__('teams.form.pec.label'))
+                            ->email()
+                            ->nullable()
+                            ->maxLength(255),
+                        FileUpload::make('logo')
+                            ->label(__('teams.form.logo.label'))
+                            ->disk('public')
+                            ->directory('team-logos')
+                            ->image()
+                            ->maxSize(2048)
+                            ->columnSpanFull(),
                         Actions::make([
                             Action::make('save')
                                 ->label(__('teams.actions.save'))

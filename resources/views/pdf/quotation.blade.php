@@ -15,37 +15,63 @@
         .terms { margin-top: 24px; font-size: 8px; line-height: 1.35; color: #4b5563; }
         .terms p { margin: 0 0 4px; }
         .terms strong { color: #111827; }
-        .sender { text-align: right; font-size: 13px; line-height: 1.45; }
-        .sender .name { font-size: 26px; font-weight: bold; }
         .doc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
-        .doc-header h1 { margin: 0; }
+        .doc-info { font-size: 13px; line-height: 1.45; }
+        .doc-sender { display: flex; align-items: flex-start; gap: 16px; }
+        .sender-text { text-align: right; font-size: 13px; line-height: 1.45; }
+        .sender-text .name { font-size: 26px; font-weight: bold; }
+        .logo { max-height: 70px; max-width: 160px; }
     </style>
 </head>
 <body>
     <div class="doc-header">
-        <h1>{{ __('filament/resources/quotation.sections.header.title') }} {{ $quotation->number }}</h1>
+        <div class="doc-info">
+            <div>Preventivo {{ $quotation->number }}</div>
+            <div>Decorrenza: {{ $quotation->issued_at?->format('d/m/Y') }}</div>
+            <div>Validità dell'offerta 30 gg</div>
+        </div>
 
-        <div class="sender">
-            <div class="name">{{ $quotation->team?->name }}</div>
-            @php
-                $teamAddress = trim(implode(' ', array_filter([
-                    $quotation->team?->address,
-                    $quotation->team?->city,
-                    $quotation->team?->postal_code,
-                    $quotation->team?->province,
-                ])));
-            @endphp
-            @if ($teamAddress !== '')
-                <div>{{ $teamAddress }}</div>
-            @endif
-            @if (filled($quotation->team?->email))
-                <div>{{ $quotation->team->email }}</div>
-            @endif
-            @if (filled($quotation->team?->phone))
-                <div>{{ $quotation->team->phone }}</div>
-            @endif
-            @if (filled($quotation->team?->partita_iva))
-                <div>C.F./P.Iva {{ $quotation->team->partita_iva }}</div>
+        <div class="doc-sender">
+            <div class="sender-text">
+                <div class="name">{{ $quotation->team?->name }}</div>
+                @php
+                    $teamAddress = trim(implode(' ', array_filter([
+                        $quotation->team?->address,
+                        $quotation->team?->city,
+                        $quotation->team?->postal_code,
+                        $quotation->team?->province,
+                    ])));
+                @endphp
+                @if ($teamAddress !== '')
+                    <div>{{ $teamAddress }}</div>
+                @endif
+                @if (filled($quotation->team?->email))
+                    <div>{{ $quotation->team->email }}</div>
+                @endif
+                @if (filled($quotation->team?->pec))
+                    <div>{{ $quotation->team->pec }}</div>
+                @endif
+                @if (filled($quotation->team?->phone))
+                    <div>{{ $quotation->team->phone }}</div>
+                @endif
+                @if (filled($quotation->team?->partita_iva))
+                    <div>C.F./P.Iva {{ $quotation->team->partita_iva }}</div>
+                @endif
+                @if (filled($quotation->team?->rea))
+                    <div>REA {{ $quotation->team->rea }}</div>
+                @endif
+            </div>
+            @if (filled($quotation->team?->logo))
+                @php
+                    $logoPath = $quotation->team->logo;
+                    $logoData = null;
+                    if (\Storage::disk('public')->exists($logoPath)) {
+                        $logoData = 'data:'.(\Storage::disk('public')->mimeType($logoPath) ?: 'image/png').';base64,'.base64_encode(\Storage::disk('public')->get($logoPath));
+                    }
+                @endphp
+                @if ($logoData)
+                    <img src="{{ $logoData }}" class="logo" alt="">
+                @endif
             @endif
         </div>
     </div>
@@ -54,14 +80,6 @@
         <tr>
             <th>{{ __('filament/resources/quotation.fields.company.label') }}</th>
             <td>{{ $quotation->company?->name }}</td>
-        </tr>
-        <tr>
-            <th>{{ __('filament/resources/quotation.fields.issued_at.label') }}</th>
-            <td>{{ $quotation->issued_at?->toDateString() }}</td>
-        </tr>
-        <tr>
-            <th>{{ __('filament/resources/quotation.fields.valid_until.label') }}</th>
-            <td>{{ $quotation->valid_until?->toDateString() }}</td>
         </tr>
     </table>
 

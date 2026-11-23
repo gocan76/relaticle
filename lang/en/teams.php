@@ -14,6 +14,9 @@ return [
         'partita_iva' => [
             'label' => 'VAT Number',
         ],
+        'rea' => [
+            'label' => 'REA (Reg. imprese)',
+        ],
         'address' => [
             'label' => 'Address',
         ],
@@ -34,6 +37,12 @@ return [
         ],
         'email' => [
             'label' => 'Email',
+        ],
+        'pec' => [
+            'label' => 'PEC (Certified Email)',
+        ],
+        'logo' => [
+            'label' => 'Logo',
         ],
     ],
 

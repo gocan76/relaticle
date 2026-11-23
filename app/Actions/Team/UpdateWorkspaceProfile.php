@@ -20,6 +20,7 @@ final readonly class UpdateWorkspaceProfile
 
         $team->update(Arr::only($data, [
             'partita_iva',
+            'rea',
             'address',
             'city',
             'postal_code',
@@ -27,6 +28,8 @@ final readonly class UpdateWorkspaceProfile
             'country',
             'phone',
             'email',
+            'pec',
+            'logo',
         ]));
 
         return $team;
