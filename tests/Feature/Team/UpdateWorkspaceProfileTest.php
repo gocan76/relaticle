@@ -90,7 +90,7 @@ it('renders the workspace business info in the quotation pdf', function (): void
         ->toContain('Via Roma 1 Milano 20100 MI')
         ->toContain('Email: info@casaviva.test')
         ->toContain('PEC: pec@casaviva.test')
-        ->toContain('02 1234567')
+        ->toContain('Tel. 02 1234567')
         ->toContain('C.F./P.Iva 12345678901')
         ->toContain('REA MI-1234567');
 });

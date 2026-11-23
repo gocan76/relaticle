@@ -15,36 +15,24 @@
         .terms { margin-top: 24px; font-size: 8px; line-height: 1.35; color: #4b5563; }
         .terms p { margin: 0 0 4px; }
         .terms strong { color: #111827; }
-        .doc-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 16px; }
-        .doc-info { font-size: 13px; line-height: 1.45; }
-        .doc-sender { display: flex; flex-direction: column; align-items: flex-end; }
-        .sender-text { text-align: right; font-size: 13px; line-height: 1.45; }
+        .doc-header { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        .doc-header td { padding: 0; }
+        .doc-info { vertical-align: bottom; font-size: 13px; line-height: 1.45; }
+        .sender-text { vertical-align: bottom; text-align: right; font-size: 13px; line-height: 1.45; padding-left: 12px; }
         .sender-text .name { font-size: 26px; font-weight: bold; }
-        .logo { max-height: 70px; max-width: 160px; margin-bottom: 8px; }
+        .logo-cell { vertical-align: middle; padding-left: 16px; }
+        .logo { max-height: 70px; max-width: 160px; }
     </style>
 </head>
 <body>
-    <div class="doc-header">
-        <div class="doc-info">
-            <div>Preventivo {{ $quotation->number }}</div>
-            <div>Decorrenza: {{ $quotation->issued_at?->format('d/m/Y') }}</div>
-            <div>Validità dell'offerta 30 gg</div>
-        </div>
-
-        <div class="doc-sender">
-            @if (filled($quotation->team?->logo))
-                @php
-                    $logoPath = $quotation->team->logo;
-                    $logoData = null;
-                    if (\Storage::disk('public')->exists($logoPath)) {
-                        $logoData = 'data:'.(\Storage::disk('public')->mimeType($logoPath) ?: 'image/png').';base64,'.base64_encode(\Storage::disk('public')->get($logoPath));
-                    }
-                @endphp
-                @if ($logoData)
-                    <img src="{{ $logoData }}" class="logo" alt="">
-                @endif
-            @endif
-            <div class="sender-text">
+    <table class="doc-header">
+        <tr>
+            <td class="doc-info" width="40%">
+                Preventivo {{ $quotation->number }}<br>
+                Decorrenza: {{ $quotation->issued_at?->format('d/m/Y') }}<br>
+                Validità dell'offerta 30 gg
+            </td>
+            <td class="sender-text" width="45%">
                 <div class="name">{{ $quotation->team?->name }}</div>
                 @php
                     $teamAddress = trim(implode(' ', array_filter([
@@ -71,17 +59,38 @@
                     </div>
                 @endif
                 @if (filled($quotation->team?->phone))
-                    <div>{{ $quotation->team->phone }}</div>
+                    <div>Tel. {{ $quotation->team->phone }}</div>
                 @endif
-                @if (filled($quotation->team?->partita_iva))
-                    <div>C.F./P.Iva {{ $quotation->team->partita_iva }}</div>
+                @if (filled($quotation->team?->partita_iva) || filled($quotation->team?->rea))
+                    <div>
+                        @if (filled($quotation->team?->partita_iva))
+                            C.F./P.Iva {{ $quotation->team->partita_iva }}
+                        @endif
+                        @if (filled($quotation->team?->partita_iva) && filled($quotation->team?->rea))
+                            &nbsp;&nbsp;
+                        @endif
+                        @if (filled($quotation->team?->rea))
+                            REA {{ $quotation->team->rea }}
+                        @endif
+                    </div>
                 @endif
-                @if (filled($quotation->team?->rea))
-                    <div>REA {{ $quotation->team->rea }}</div>
+            </td>
+            <td class="logo-cell" width="15%">
+                @if (filled($quotation->team?->logo))
+                    @php
+                        $logoPath = $quotation->team->logo;
+                        $logoData = null;
+                        if (\Storage::disk('public')->exists($logoPath)) {
+                            $logoData = 'data:'.(\Storage::disk('public')->mimeType($logoPath) ?: 'image/png').';base64,'.base64_encode(\Storage::disk('public')->get($logoPath));
+                        }
+                    @endphp
+                    @if ($logoData)
+                        <img src="{{ $logoData }}" class="logo" alt="">
+                    @endif
                 @endif
-            </div>
-        </div>
-    </div>
+            </td>
+        </tr>
+    </table>
 
     <table class="header">
         <tr>
