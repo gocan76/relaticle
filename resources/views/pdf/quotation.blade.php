@@ -15,39 +15,40 @@
         .terms { margin-top: 24px; font-size: 8px; line-height: 1.35; color: #4b5563; }
         .terms p { margin: 0 0 4px; }
         .terms strong { color: #111827; }
-        .sender { margin-bottom: 20px; font-size: 12px; line-height: 1.4; }
-        .sender strong { font-size: 14px; }
+        .sender { text-align: right; font-size: 13px; line-height: 1.45; }
+        .sender .name { font-size: 26px; font-weight: bold; }
+        .doc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+        .doc-header h1 { margin: 0; }
     </style>
 </head>
 <body>
-    <div class="sender">
-        <strong>{{ $quotation->team?->name }}</strong>
-        @if (filled($quotation->team?->address))
-            <br>{{ $quotation->team->address }}
-        @endif
-        @php
-            $teamLocality = trim(implode(' ', array_filter([
-                $quotation->team?->postal_code,
-                $quotation->team?->city,
-                $quotation->team?->province ? '('.$quotation->team->province.')' : null,
-                $quotation->team?->country,
-            ])));
-        @endphp
-        @if ($teamLocality !== '')
-            <br>{{ $teamLocality }}
-        @endif
-        @if (filled($quotation->team?->partita_iva))
-            <br>P.IVA {{ $quotation->team->partita_iva }}
-        @endif
-        @if (filled($quotation->team?->phone))
-            <br>Tel. {{ $quotation->team->phone }}
-        @endif
-        @if (filled($quotation->team?->email))
-            <br>{{ $quotation->team->email }}
-        @endif
-    </div>
+    <div class="doc-header">
+        <h1>{{ __('filament/resources/quotation.sections.header.title') }} {{ $quotation->number }}</h1>
 
-    <h1>{{ __('filament/resources/quotation.sections.header.title') }} {{ $quotation->number }}</h1>
+        <div class="sender">
+            <div class="name">{{ $quotation->team?->name }}</div>
+            @php
+                $teamAddress = trim(implode(' ', array_filter([
+                    $quotation->team?->address,
+                    $quotation->team?->city,
+                    $quotation->team?->postal_code,
+                    $quotation->team?->province,
+                ])));
+            @endphp
+            @if ($teamAddress !== '')
+                <div>{{ $teamAddress }}</div>
+            @endif
+            @if (filled($quotation->team?->email))
+                <div>{{ $quotation->team->email }}</div>
+            @endif
+            @if (filled($quotation->team?->phone))
+                <div>{{ $quotation->team->phone }}</div>
+            @endif
+            @if (filled($quotation->team?->partita_iva))
+                <div>C.F./P.Iva {{ $quotation->team->partita_iva }}</div>
+            @endif
+        </div>
+    </div>
 
     <table class="header">
         <tr>

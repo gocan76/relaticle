@@ -56,6 +56,10 @@ it('renders the workspace business info in the quotation pdf', function (): void
         'partita_iva' => '12345678901',
         'address' => 'Via Roma 1',
         'city' => 'Milano',
+        'postal_code' => '20100',
+        'province' => 'MI',
+        'phone' => '02 1234567',
+        'email' => 'info@casaviva.test',
     ]);
 
     $company = Company::factory()->create(['team_id' => $this->team->getKey()]);
@@ -72,6 +76,8 @@ it('renders the workspace business info in the quotation pdf', function (): void
     ])->render();
 
     expect($html)->toContain('Casaviva SRL')
-        ->toContain('Via Roma 1')
-        ->toContain('P.IVA 12345678901');
+        ->toContain('Via Roma 1 Milano 20100 MI')
+        ->toContain('info@casaviva.test')
+        ->toContain('02 1234567')
+        ->toContain('C.F./P.Iva 12345678901');
 });
