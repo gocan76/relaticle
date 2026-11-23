@@ -15,6 +15,21 @@ return [
         'partita_iva' => [
             'label' => 'Numéro de TVA',
         ],
+        'address' => [
+            'label' => 'Adresse',
+        ],
+        'city' => [
+            'label' => 'Ville',
+        ],
+        'postal_code' => [
+            'label' => 'Code postal',
+        ],
+        'province' => [
+            'label' => 'Province',
+        ],
+        'country' => [
+            'label' => 'Pays',
+        ],
         'account_owner' => [
             'label' => 'Responsable du compte',
         ],

@@ -72,6 +72,9 @@ return [
 
     'actions' => [
         'add_fornitura_item' => 'Add item',
+        'export_easyfatt' => [
+            'label' => 'Export Easyfatt-Xml',
+        ],
         'send' => [
             'label' => 'Send',
             'confirm_heading' => 'Send this quotation?',

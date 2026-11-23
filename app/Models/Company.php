@@ -36,6 +36,11 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 /**
  * @property string $name
  * @property string|null $partita_iva
+ * @property string|null $address
+ * @property string|null $city
+ * @property string|null $postal_code
+ * @property string|null $province
+ * @property string|null $country
  * @property Carbon|null $deleted_at
  * @property CreationSource $creation_source
  * @property array<int, string>|null $documents
@@ -46,6 +51,11 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 #[Fillable([
     'name',
     'partita_iva',
+    'address',
+    'city',
+    'postal_code',
+    'province',
+    'country',
     'creation_source',
     'documents',
     'document_file_names',

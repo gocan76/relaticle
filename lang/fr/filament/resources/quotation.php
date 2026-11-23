@@ -71,6 +71,9 @@ return [
 
     'actions' => [
         'add_fornitura_item' => 'Ajouter une ligne',
+        'export_easyfatt' => [
+            'label' => 'Exporter Easyfatt-Xml',
+        ],
         'send' => [
             'label' => 'Envoyer',
             'confirm_heading' => 'Envoyer ce devis ?',

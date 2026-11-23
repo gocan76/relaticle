@@ -57,6 +57,22 @@ final class CompanyResource extends Resource
                         ignoreRecord: true,
                         modifyRuleUsing: fn (Unique $rule): Unique => $rule->where('team_id', filament()->getTenant()->getKey()),
                     ),
+                TextInput::make('address')
+                    ->label(__('filament/resources/company.fields.address.label'))
+                    ->maxLength(255),
+                TextInput::make('city')
+                    ->label(__('filament/resources/company.fields.city.label'))
+                    ->maxLength(100),
+                TextInput::make('postal_code')
+                    ->label(__('filament/resources/company.fields.postal_code.label'))
+                    ->maxLength(20),
+                TextInput::make('province')
+                    ->label(__('filament/resources/company.fields.province.label'))
+                    ->maxLength(2),
+                TextInput::make('country')
+                    ->label(__('filament/resources/company.fields.country.label'))
+                    ->maxLength(100)
+                    ->default('Italia'),
                 TeamMemberSelect::make('account_owner_id')
                     ->relationship('accountOwner', 'name')
                     ->label(__('filament/resources/company.fields.account_owner_id.label'))

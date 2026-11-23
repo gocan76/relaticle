@@ -13,8 +13,10 @@ use App\Filament\Resources\QuotationResource\Pages\ListQuotations;
 use App\Filament\Resources\QuotationResource\Pages\ViewQuotation;
 use App\Models\Quotation;
 use App\Models\User;
+use App\Services\EasyfattXmlExporter;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -33,6 +35,9 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final class QuotationResource extends Resource
 {
@@ -125,11 +130,13 @@ final class QuotationResource extends Resource
                     ViewAction::make(),
                     self::editAction(),
                     self::sendAction(),
+                    self::exportEasyfattAction(),
                     DeleteAction::make(),
                 ]),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
+                    self::exportEasyfattBulkAction(),
                     DeleteBulkAction::make(),
                 ]),
             ]);
@@ -165,6 +172,49 @@ final class QuotationResource extends Resource
 
                 resolve(SendQuotation::class)->execute($user, $record);
             });
+    }
+
+    public static function exportEasyfattAction(): Action
+    {
+        return Action::make('exportEasyfatt')
+            ->label(__('filament/resources/quotation.actions.export_easyfatt.label'))
+            ->icon('heroicon-o-arrow-down-tray')
+            ->action(function (Quotation $record): StreamedResponse {
+                $xml = resolve(EasyfattXmlExporter::class)->generate(collect([$record]));
+
+                return response()->streamDownload(
+                    function () use ($xml): void {
+                        echo $xml;
+                    },
+                    self::exportFilename($record),
+                    ['Content-Type' => 'application/xml; charset=UTF-8'],
+                );
+            });
+    }
+
+    public static function exportEasyfattBulkAction(): BulkAction
+    {
+        return BulkAction::make('exportEasyfatt')
+            ->label(__('filament/resources/quotation.actions.export_easyfatt.label'))
+            ->icon('heroicon-o-arrow-down-tray')
+            ->action(function (Collection $records): StreamedResponse {
+                $xml = resolve(EasyfattXmlExporter::class)->generate($records);
+
+                return response()->streamDownload(
+                    function () use ($xml): void {
+                        echo $xml;
+                    },
+                    'easyfatt-'.now()->format('Ymd-His').'.xml',
+                    ['Content-Type' => 'application/xml; charset=UTF-8'],
+                );
+            });
+    }
+
+    private static function exportFilename(Quotation $record): string
+    {
+        $number = $record->getAttribute('number');
+
+        return 'preventivo-'.Str::slug(is_string($number) && $number !== '' ? $number : (string) $record->getKey()).'.xml';
     }
 
     public static function getPages(): array

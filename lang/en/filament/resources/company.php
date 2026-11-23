@@ -18,6 +18,21 @@ return [
         'partita_iva' => [
             'label' => 'VAT Number',
         ],
+        'address' => [
+            'label' => 'Address',
+        ],
+        'city' => [
+            'label' => 'City',
+        ],
+        'postal_code' => [
+            'label' => 'Postal Code',
+        ],
+        'province' => [
+            'label' => 'Province',
+        ],
+        'country' => [
+            'label' => 'Country',
+        ],
         'account_owner' => [
             'label' => 'Account Owner',
         ],
