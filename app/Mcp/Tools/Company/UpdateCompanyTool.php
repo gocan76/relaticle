@@ -48,6 +48,7 @@ final class UpdateCompanyTool extends BaseUpdateTool
     {
         return [
             'name' => $schema->string()->description('The company name.'),
+            'partita_iva' => $schema->string()->description('The company VAT number (partita IVA). Unique within the workspace.'),
         ];
     }
 
@@ -55,6 +56,7 @@ final class UpdateCompanyTool extends BaseUpdateTool
     {
         return [
             'name' => ['sometimes', 'string', 'max:255'],
+            'partita_iva' => ['sometimes', 'nullable', 'string', 'max:64'],
         ];
     }
 }

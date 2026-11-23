@@ -20,6 +20,8 @@ final class CompanyExporter extends BaseExporter
                 ->label(__('filament/exports.columns.id')),
             ExportColumn::make('name')
                 ->label(__('filament/exports.columns.company_name')),
+            ExportColumn::make('partita_iva')
+                ->label(__('filament/exports.columns.partita_iva')),
             ExportColumn::make('team.name')
                 ->label(__('filament/exports.columns.team')),
             ExportColumn::make('accountOwner.name')

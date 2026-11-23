@@ -12,6 +12,9 @@ return [
         'name' => [
             'label' => 'Entreprise',
         ],
+        'partita_iva' => [
+            'label' => 'Numéro de TVA',
+        ],
         'account_owner' => [
             'label' => 'Responsable du compte',
         ],

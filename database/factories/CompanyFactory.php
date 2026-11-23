@@ -27,6 +27,7 @@ final class CompanyFactory extends Factory
     {
         return [
             'name' => $this->faker->company(),
+            'partita_iva' => $this->faker->unique()->numerify('###########'),
             'account_owner_id' => User::factory(),
             'team_id' => Team::factory(),
         ];

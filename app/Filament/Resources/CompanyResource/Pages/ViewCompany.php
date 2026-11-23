@@ -97,6 +97,9 @@ final class ViewCompany extends ViewRecord
                                 ->circular()
                                 ->label(__('filament/resources/company.pages.view.infolist.fields.account_owner.label')),
                         ]),
+                        TextEntry::make('partita_iva')
+                            ->label(__('filament/resources/company.fields.partita_iva.label'))
+                            ->placeholder('—'),
                         CustomFields::infolist()->forSchema($schema)->build(),
                     ]),
                     Section::make([

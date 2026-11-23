@@ -31,6 +31,7 @@ use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Validation\Rules\Unique;
 use Relaticle\CustomFields\Facades\CustomFields;
 
 final class CompanyResource extends Resource
@@ -49,6 +50,13 @@ final class CompanyResource extends Resource
             ->components([
                 TextInput::make('name')
                     ->required(),
+                TextInput::make('partita_iva')
+                    ->label(__('filament/resources/company.fields.partita_iva.label'))
+                    ->maxLength(64)
+                    ->unique(
+                        ignoreRecord: true,
+                        modifyRuleUsing: fn (Unique $rule): Unique => $rule->where('team_id', filament()->getTenant()->getKey()),
+                    ),
                 TeamMemberSelect::make('account_owner_id')
                     ->relationship('accountOwner', 'name')
                     ->label(__('filament/resources/company.fields.account_owner_id.label'))
@@ -94,6 +102,11 @@ final class CompanyResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->view('filament.tables.columns.logo-name-column'),
+                TextColumn::make('partita_iva')
+                    ->label(__('filament/resources/company.fields.partita_iva.label'))
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('accountOwner.name')
                     ->label(__('filament/resources/company.fields.account_owner.label'))
                     ->searchable()
@@ -180,7 +193,7 @@ final class CompanyResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['name'];
+        return ['name', 'partita_iva'];
     }
 
     public static function getEloquentQuery(): Builder

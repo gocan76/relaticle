@@ -15,6 +15,9 @@ return [
         'name' => [
             'label' => 'Company',
         ],
+        'partita_iva' => [
+            'label' => 'VAT Number',
+        ],
         'account_owner' => [
             'label' => 'Account Owner',
         ],

@@ -35,6 +35,7 @@ final class CreateCompanyTool extends BaseCreateTool
     {
         return [
             'name' => $schema->string()->description('The company name.')->required(),
+            'partita_iva' => $schema->string()->description('The company VAT number (partita IVA). Unique within the workspace.'),
         ];
     }
 
@@ -42,6 +43,7 @@ final class CreateCompanyTool extends BaseCreateTool
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+            'partita_iva' => ['nullable', 'string', 'max:64'],
         ];
     }
 }

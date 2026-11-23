@@ -38,8 +38,8 @@ it('can render the view page', function (): void {
 // dataset case per column: mounting the page dominates the cost, and Filament's
 // assertion messages already name the offending column.
 it('exposes the expected table columns', function (): void {
-    $columns = ['name', 'accountOwner.name', 'creator.name', 'deleted_at', 'created_at', 'updated_at'];
-    $renderable = ['name', 'accountOwner.name', 'creator.name', 'created_at', 'updated_at'];
+    $columns = ['name', 'partita_iva', 'accountOwner.name', 'creator.name', 'deleted_at', 'created_at', 'updated_at'];
+    $renderable = ['name', 'partita_iva', 'accountOwner.name', 'creator.name', 'created_at', 'updated_at'];
 
     $table = livewire(ListCompanies::class);
 
@@ -67,7 +67,7 @@ it('can sort `:dataset` column', function (string $column): void {
         ->assertCanSeeTableRecords($records->sortBy($sortingKey), inOrder: true)
         ->sortTable($column, 'desc')
         ->assertCanSeeTableRecords($records->sortByDesc($sortingKey), inOrder: true);
-})->with(['name', 'accountOwner.name', 'creator.name', 'deleted_at', 'created_at', 'updated_at']);
+})->with(['name', 'partita_iva', 'accountOwner.name', 'creator.name', 'deleted_at', 'created_at', 'updated_at']);
 
 it('can search `:dataset` column', function (string $column): void {
     $records = Company::factory(3)->recycle([$this->user, $this->team])->create();
@@ -79,7 +79,7 @@ it('can search `:dataset` column', function (string $column): void {
         ->searchTable($search instanceof BackedEnum ? $search->value : $search)
         ->assertCanSeeTableRecords($visibleRecords)
         ->assertCountTableRecords($visibleRecords->count());
-})->with(['name', 'accountOwner.name', 'creator.name']);
+})->with(['name', 'partita_iva', 'accountOwner.name', 'creator.name']);
 
 it('cannot display trashed records by default', function (): void {
     $records = Company::factory()->count(4)->recycle([$this->user, $this->team])->create();
@@ -134,6 +134,50 @@ it('can create a company', function (): void {
     ]);
 });
 
+it('stores the VAT number normalized to uppercase on create', function (): void {
+    livewire(ListCompanies::class)
+        ->callAction('create', data: [
+            'name' => 'Acme Corp',
+            'partita_iva' => 'it12345678901',
+        ])
+        ->assertHasNoActionErrors();
+
+    $this->assertDatabaseHas(Company::class, [
+        'name' => 'Acme Corp',
+        'partita_iva' => 'IT12345678901',
+        'team_id' => $this->team->id,
+    ]);
+});
+
+it('rejects a duplicate VAT number within the same team', function (): void {
+    Company::factory()->recycle([$this->user, $this->team])->create([
+        'partita_iva' => 'IT12345678901',
+    ]);
+
+    livewire(ListCompanies::class)
+        ->callAction('create', data: [
+            'name' => 'Duplicate Corp',
+            'partita_iva' => 'IT12345678901',
+        ])
+        ->assertHasActionErrors(['partita_iva' => 'unique']);
+});
+
+it('allows the same VAT number across different teams', function (): void {
+    $otherUser = User::factory()->withTeam()->create();
+    $otherTeam = $otherUser->currentTeam;
+
+    Company::factory()->for($otherTeam)->create([
+        'partita_iva' => 'IT12345678901',
+    ]);
+
+    livewire(ListCompanies::class)
+        ->callAction('create', data: [
+            'name' => 'Other Team Corp',
+            'partita_iva' => 'IT12345678901',
+        ])
+        ->assertHasNoActionErrors();
+});
+
 it('can edit a company', function (): void {
     $record = Company::factory()->recycle([$this->user, $this->team])->create();
 
@@ -144,6 +188,19 @@ it('can edit a company', function (): void {
         ->assertHasNoActionErrors();
 
     expect($record->refresh()->name)->toBe('Updated Company');
+});
+
+it('can edit a company VAT number', function (): void {
+    $record = Company::factory()->recycle([$this->user, $this->team])->create();
+
+    livewire(ListCompanies::class)
+        ->callAction(TestAction::make('edit')->table($record), data: [
+            'name' => $record->name,
+            'partita_iva' => 'IT98765432100',
+        ])
+        ->assertHasNoActionErrors();
+
+    expect($record->refresh()->partita_iva)->toBe('IT98765432100');
 });
 
 it('can delete a company', function (): void {

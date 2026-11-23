@@ -31,6 +31,7 @@ final class CreateCompanyTool extends BaseWriteCreateTool
     {
         return [
             'name' => $schema->string()->description('The company name.')->required(),
+            'partita_iva' => $schema->string()->description('The company VAT number (partita IVA). Unique within the workspace.'),
             'account_owner_id' => $schema->string()->description(
                 'OPTIONAL — the team member who owns this company (a user id from the'
                 .' list team members tool, never a contact/person). Defaults to the current user.',
@@ -52,6 +53,7 @@ final class CreateCompanyTool extends BaseWriteCreateTool
 
         return [
             'name' => (string) ($record['name'] ?? ''),
+            'partita_iva' => $record['partita_iva'] ?? null,
             'account_owner_id' => is_string($ownerId) && $ownerId !== '' ? $ownerId : $user->getKey(),
         ];
     }
@@ -60,6 +62,12 @@ final class CreateCompanyTool extends BaseWriteCreateTool
     {
         $name = (string) ($record['name'] ?? '');
         $fields = [['label' => 'Name', 'value' => $name]];
+
+        $partitaIva = $record['partita_iva'] ?? null;
+
+        if (filled($partitaIva)) {
+            $fields[] = ['label' => 'Partita IVA', 'value' => $partitaIva];
+        }
 
         $ownerId = $record['account_owner_id'] ?? null;
 

@@ -14,6 +14,7 @@ use App\Services\AvatarService;
 use Database\Factories\CompanyFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -34,6 +35,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 /**
  * @property string $name
+ * @property string|null $partita_iva
  * @property Carbon|null $deleted_at
  * @property CreationSource $creation_source
  * @property array<int, string>|null $documents
@@ -43,6 +45,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 #[ObservedBy(CompanyObserver::class)]
 #[Fillable([
     'name',
+    'partita_iva',
     'creation_source',
     'documents',
     'document_file_names',
@@ -92,6 +95,16 @@ final class Company extends Model implements HasCustomFields, HasMedia, HasTimel
         $logo = $this->getFirstMediaUrl(self::LOGO_MEDIA_COLLECTION);
 
         return $logo === '' || $logo === '0' ? resolve(AvatarService::class)->generateAuto(name: $this->name) : $logo;
+    }
+
+    /**
+     * Normalize the VAT number so duplicates are detected reliably.
+     */
+    protected function partitaIva(): Attribute
+    {
+        return Attribute::make(
+            set: fn (?string $value): ?string => filled($value) ? mb_strtoupper(trim($value)) : null,
+        );
     }
 
     /**

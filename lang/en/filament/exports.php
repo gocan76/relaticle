@@ -13,6 +13,7 @@ return [
         'updated_at' => 'Updated At',
         'deleted_at' => 'Deleted At',
         'company_name' => 'Company Name',
+        'partita_iva' => 'VAT Number',
         'people_count' => 'Number of People',
         'opportunities_count' => 'Number of Opportunities',
         'opportunity_name' => 'Opportunity Name',

@@ -43,6 +43,17 @@ final class CompanyImporter extends BaseImporter
                 ])
                 ->example('Acme Corporation')
                 ->icon('heroicon-o-building-office-2'),
+
+            ImportField::make('partita_iva')
+                ->label('Partita IVA')
+                ->rules(['nullable', 'string', 'max:64'])
+                ->guess([
+                    'partita_iva', 'partita iva', 'p_iva', 'p.iva', 'iva',
+                    'vat', 'vat_number', 'vat number', 'tax_id', 'tax id',
+                    'numero_iva', 'codice_fiscale_azienda',
+                ])
+                ->example('IT12345678901')
+                ->icon('heroicon-o-identification'),
         ]);
     }
 

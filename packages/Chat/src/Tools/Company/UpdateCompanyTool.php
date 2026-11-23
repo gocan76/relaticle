@@ -44,6 +44,7 @@ final class UpdateCompanyTool extends BaseWriteUpdateTool
     {
         return [
             'name' => $schema->string()->description('The new company name.'),
+            'partita_iva' => $schema->string()->description('The company VAT number (partita IVA). Pass an empty string to clear it.'),
             'account_owner_id' => $schema->string()->description(
                 'Set the account owner — the team member responsible for this company.'
                 .' MUST be a user id from the list team members tool (contacts/people are not valid).'
@@ -63,6 +64,10 @@ final class UpdateCompanyTool extends BaseWriteUpdateTool
             'name' => $request['name'] ?? null,
         ], fn (mixed $v): bool => $v !== null);
 
+        if (($request['partita_iva'] ?? null) !== null) {
+            $data['partita_iva'] = $request['partita_iva'] === '' ? null : (string) $request['partita_iva'];
+        }
+
         $owner = $this->requestedOwner($request['account_owner_id'] ?? null);
 
         if ($owner !== false) {
@@ -78,6 +83,14 @@ final class UpdateCompanyTool extends BaseWriteUpdateTool
 
         if (($request['name'] ?? null) !== null) {
             $fields[] = ['label' => 'Name', 'old' => $model->getAttribute('name'), 'new' => $request['name']];
+        }
+
+        if (($request['partita_iva'] ?? null) !== null) {
+            $fields[] = [
+                'label' => 'Partita IVA',
+                'old' => $model->getAttribute('partita_iva') ?? '—',
+                'new' => $request['partita_iva'] === '' ? '—' : $request['partita_iva'],
+            ];
         }
 
         $owner = $this->requestedOwner($request['account_owner_id'] ?? null);

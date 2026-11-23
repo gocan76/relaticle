@@ -22,7 +22,7 @@ final readonly class UpdateCompany
 
         TenantFkValidator::assertUserInWorkspace($user, $data, ['account_owner_id']);
 
-        $attributes = Arr::only($data, ['name', 'account_owner_id', 'custom_fields']);
+        $attributes = Arr::only($data, ['name', 'partita_iva', 'account_owner_id', 'custom_fields']);
 
         $attributes = CustomFieldMerger::merge($company, $attributes);
 

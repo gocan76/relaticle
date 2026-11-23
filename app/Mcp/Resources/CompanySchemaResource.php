@@ -44,6 +44,7 @@ final class CompanySchemaResource extends Resource
             'description' => 'Organizations and businesses tracked in the CRM.',
             'fields' => [
                 'name' => ['type' => 'string', 'required' => true],
+                'partita_iva' => ['type' => 'string', 'required' => false, 'unique' => true, 'description' => 'VAT number (partita IVA), unique within the workspace'],
             ],
             'custom_fields' => $this->resolveCustomFields($user, 'company'),
             'filterable_fields' => $this->resolveFilterableFields($user, 'company'),

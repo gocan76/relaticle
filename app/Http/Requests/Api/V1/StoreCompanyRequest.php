@@ -7,6 +7,7 @@ namespace App\Http\Requests\Api\V1;
 use App\Models\User;
 use App\Rules\ValidCustomFields;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class StoreCompanyRequest extends FormRequest
 {
@@ -21,6 +22,7 @@ final class StoreCompanyRequest extends FormRequest
 
         return array_merge([
             'name' => ['required', 'string', 'max:255'],
+            'partita_iva' => ['nullable', 'string', 'max:64', Rule::unique('companies', 'partita_iva')->where('team_id', $teamId)],
         ], new ValidCustomFields($teamId, 'company')->toRules($this->input('custom_fields')));
     }
 }
