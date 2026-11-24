@@ -70,7 +70,16 @@ it('renders the workspace business info in the quotation pdf', function (): void
         'pec' => 'pec@casaviva.test',
     ]);
 
-    $company = Company::factory()->create(['team_id' => $this->team->getKey()]);
+    $company = Company::factory()->create([
+        'team_id' => $this->team->getKey(),
+        'name' => 'Cliente Demo SRL',
+        'partita_iva' => '00209560994',
+        'address' => 'Via per Santa Vittoria 5',
+        'city' => 'Sestri Levante',
+        'postal_code' => '16039',
+        'province' => 'GE',
+        'country' => 'Italia',
+    ]);
 
     $quotation = Quotation::factory()->create([
         'team_id' => $this->team->getKey(),
@@ -92,5 +101,11 @@ it('renders the workspace business info in the quotation pdf', function (): void
         ->toContain('PEC: pec@casaviva.test')
         ->toContain('Tel. 02 1234567')
         ->toContain('C.F./P.Iva 12345678901')
-        ->toContain('REA MI-1234567');
+        ->toContain('REA MI-1234567')
+        ->toContain('Destinatario')
+        ->toContain('Cliente Demo SRL')
+        ->toContain('Via per Santa Vittoria 5')
+        ->toContain('16039 Sestri Levante (GE)')
+        ->toContain('Italia')
+        ->toContain('P.Iva 00209560994');
 });

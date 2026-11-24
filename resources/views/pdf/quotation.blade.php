@@ -22,13 +22,19 @@
         .logo-cell { vertical-align: middle; padding-left: 16px; }
         .logo { max-height: 70px; max-width: 160px; }
         .doc-info { font-size: 11px; line-height: 1.25; margin-bottom: 16px; }
+        .inline { white-space: nowrap; }
+        .recipient { width: 55%; border-collapse: collapse; margin-bottom: 16px; }
+        .recipient td { background-color: #f3f4f6; padding: 8px 12px; }
+        .recipient .label { font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; color: #6b7280; margin-bottom: 4px; }
+        .recipient .name { font-size: 13px; font-weight: bold; line-height: 1.3; }
+        .recipient .detail { font-size: 11px; line-height: 1.25; }
     </style>
 </head>
 <body>
     <table class="doc-sender">
         <tr>
-            <td width="40%" valign="top">&nbsp;</td>
-            <td class="sender-text" width="45%" valign="middle">
+            <td width="30%" valign="top">&nbsp;</td>
+            <td class="sender-text" width="55%" valign="middle">
                 <div class="name">{{ $quotation->team?->name }}</div>
                 @php
                     $teamAddress = trim(implode(' ', array_filter([
@@ -42,7 +48,7 @@
                     <div>{{ $teamAddress }}</div>
                 @endif
                 @if (filled($quotation->team?->email) || filled($quotation->team?->pec))
-                    <div>
+                    <div class="inline">
                         @if (filled($quotation->team?->email))
                             Email: {{ $quotation->team->email }}
                         @endif
@@ -58,7 +64,7 @@
                     <div>Tel. {{ $quotation->team->phone }}</div>
                 @endif
                 @if (filled($quotation->team?->partita_iva) || filled($quotation->team?->rea))
-                    <div>
+                    <div class="inline">
                         @if (filled($quotation->team?->partita_iva))
                             C.F./P.Iva {{ $quotation->team->partita_iva }}
                         @endif
@@ -94,10 +100,31 @@
         Validità dell'offerta 30 gg
     </div>
 
-    <table class="header">
+    <table class="recipient">
         <tr>
-            <th>{{ __('filament/resources/quotation.fields.company.label') }}</th>
-            <td>{{ $quotation->company?->name }}</td>
+            <td>
+                <div class="label">Destinatario</div>
+                <div class="name">{{ $quotation->company?->name }}</div>
+                @if (filled($quotation->company?->address))
+                    <div class="detail">{{ $quotation->company->address }}</div>
+                @endif
+                @php
+                    $companyLocality = trim(implode(' ', array_filter([
+                        $quotation->company?->postal_code,
+                        $quotation->company?->city,
+                        $quotation->company?->province ? '('.$quotation->company->province.')' : null,
+                    ])));
+                @endphp
+                @if ($companyLocality !== '')
+                    <div class="detail">{{ $companyLocality }}</div>
+                @endif
+                @if (filled($quotation->company?->country))
+                    <div class="detail">{{ $quotation->company->country }}</div>
+                @endif
+                @if (filled($quotation->company?->partita_iva))
+                    <div class="detail">P.Iva {{ $quotation->company->partita_iva }}</div>
+                @endif
+            </td>
         </tr>
     </table>
 
