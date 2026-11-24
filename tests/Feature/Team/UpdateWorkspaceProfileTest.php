@@ -87,7 +87,7 @@ it('renders the workspace business info in the quotation pdf', function (): void
         ->toContain('Decorrenza:')
         ->toContain("Validità dell'offerta 30 gg")
         ->toContain('Casaviva SRL')
-        ->toContain('Via Roma 1 Milano 20100 MI')
+        ->toContain('Via Roma 1 Milano 20100 (MI)')
         ->toContain('Email: info@casaviva.test')
         ->toContain('PEC: pec@casaviva.test')
         ->toContain('Tel. 02 1234567')

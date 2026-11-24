@@ -17,9 +17,9 @@
         .terms strong { color: #111827; }
         .doc-header { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
         .doc-header td { padding: 0; }
-        .doc-info { vertical-align: bottom; font-size: 13px; line-height: 1.45; }
-        .sender-text { vertical-align: bottom; text-align: right; font-size: 13px; line-height: 1.45; padding-left: 12px; }
-        .sender-text .name { font-size: 26px; font-weight: bold; }
+        .doc-info { vertical-align: bottom; font-size: 13px; line-height: 1.4; }
+        .sender-text { vertical-align: bottom; text-align: right; font-size: 11px; line-height: 1.25; padding-left: 12px; }
+        .sender-text .name { font-size: 26px; font-weight: bold; line-height: 1.2; }
         .logo-cell { vertical-align: middle; padding-left: 16px; }
         .logo { max-height: 70px; max-width: 160px; }
     </style>
@@ -27,19 +27,19 @@
 <body>
     <table class="doc-header">
         <tr>
-            <td class="doc-info" width="40%">
+            <td class="doc-info" width="40%" valign="bottom">
                 Preventivo {{ $quotation->number }}<br>
                 Decorrenza: {{ $quotation->issued_at?->format('d/m/Y') }}<br>
                 Validità dell'offerta 30 gg
             </td>
-            <td class="sender-text" width="45%">
+            <td class="sender-text" width="45%" valign="bottom">
                 <div class="name">{{ $quotation->team?->name }}</div>
                 @php
                     $teamAddress = trim(implode(' ', array_filter([
                         $quotation->team?->address,
                         $quotation->team?->city,
                         $quotation->team?->postal_code,
-                        $quotation->team?->province,
+                        $quotation->team?->province ? '('.$quotation->team->province.')' : null,
                     ])));
                 @endphp
                 @if ($teamAddress !== '')
@@ -75,7 +75,7 @@
                     </div>
                 @endif
             </td>
-            <td class="logo-cell" width="15%">
+            <td class="logo-cell" width="15%" valign="middle">
                 @if (filled($quotation->team?->logo))
                     @php
                         $logoPath = $quotation->team->logo;
