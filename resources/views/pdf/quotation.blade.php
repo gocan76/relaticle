@@ -177,19 +177,20 @@
         </tbody>
     </table>
 
-    @if (filled($quotation->payment_name) || filled($quotation->team?->bank_details))
-        <div class="payment">
-            @if (filled($quotation->payment_name))
-                <div><strong>Modalità di pagamento:</strong> {{ $quotation->payment_name }}</div>
-                @if ($quotation->payment_name === \App\Models\Quotation::PAYMENT_METHOD_DEPOSIT_50)
-                    <div><strong>Acconto (50%):</strong> {{ number_format($quotation->deposit_amount, 2) }} &euro;</div>
-                @endif
+    @php
+        $bankDetails = filled($quotation->team?->bank_details)
+            ? $quotation->team->bank_details
+            : 'UNICREDIT IT 57 U 02008 33680 000107478057';
+    @endphp
+    <div class="payment">
+        @if (filled($quotation->payment_name))
+            <div><strong>Modalità di pagamento:</strong> {{ $quotation->payment_name }}</div>
+            @if ($quotation->payment_name === \App\Models\Quotation::PAYMENT_METHOD_DEPOSIT_50)
+                <div><strong>Acconto (50%):</strong> {{ number_format($quotation->deposit_amount, 2) }} &euro;</div>
             @endif
-            @if (filled($quotation->team?->bank_details))
-                <div><strong>Coordinate bancarie:</strong> {{ $quotation->team->bank_details }}</div>
-            @endif
-        </div>
-    @endif
+        @endif
+        <div><strong>Coordinate bancarie:</strong> {{ $bankDetails }}</div>
+    </div>
 
     @if ($quotation->notes)
         <p>{{ $quotation->notes }}</p>

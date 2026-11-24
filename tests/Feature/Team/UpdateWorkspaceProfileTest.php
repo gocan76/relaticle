@@ -125,3 +125,22 @@ it('renders the workspace business info in the quotation pdf', function (): void
         ->toContain('Coordinate bancarie:')
         ->toContain('UNICREDIT IT 57 U 02008 33680 000107478057');
 });
+
+it('shows default bank details in the quotation pdf when the workspace has none', function () {
+    $company = Company::factory()->create(['team_id' => $this->team->getKey()]);
+
+    $quotation = Quotation::factory()->create([
+        'team_id' => $this->team->getKey(),
+        'company_id' => $company->getKey(),
+        'number' => 'Q-0002',
+        'payment_name' => Quotation::PAYMENT_METHOD_DEPOSIT_50,
+    ]);
+
+    $html = view('pdf.quotation', [
+        'quotation' => $quotation->loadMissing(['company', 'team']),
+        'areas' => QuotationArea::cases(),
+    ])->render();
+
+    expect($html)->toContain('Coordinate bancarie:')
+        ->toContain('UNICREDIT IT 57 U 02008 33680 000107478057');
+});
