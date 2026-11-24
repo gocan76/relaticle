@@ -39,6 +39,7 @@ final class UpdateWorkspaceProfile extends BaseLivewireComponent
             'email',
             'pec',
             'logo',
+            'bank_details',
         ]));
     }
 
@@ -91,6 +92,10 @@ final class UpdateWorkspaceProfile extends BaseLivewireComponent
                             ->label(__('teams.form.pec.label'))
                             ->email()
                             ->nullable()
+                            ->maxLength(255),
+                        TextInput::make('bank_details')
+                            ->label(__('teams.form.bank_details.label'))
+                            ->string()
                             ->maxLength(255),
                         FileUpload::make('logo')
                             ->label(__('teams.form.logo.label'))

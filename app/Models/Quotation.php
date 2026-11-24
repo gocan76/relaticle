@@ -26,6 +26,7 @@ use Illuminate\Support\Carbon;
  * @property-read float $subtotal_amount
  * @property-read float $iva_amount
  * @property-read float $total_amount
+ * @property-read float $deposit_amount
  */
 #[Fillable([
     'number',
@@ -51,6 +52,8 @@ final class Quotation extends Model
     use HasUlids;
 
     public const float IVA_RATE = 0.22;
+
+    public const string PAYMENT_METHOD_DEPOSIT_50 = 'Acconto 50% alla conferma - saldo alla consegna B.B.';
 
     protected function casts(): array
     {
@@ -102,6 +105,11 @@ final class Quotation extends Model
     public function getTotalAmountAttribute(): float
     {
         return round($this->subtotal_amount + $this->iva_amount, 2);
+    }
+
+    public function getDepositAmountAttribute(): float
+    {
+        return round($this->total_amount / 2, 2);
     }
 
     /**

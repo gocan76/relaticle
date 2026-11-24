@@ -44,6 +44,9 @@ return [
         'logo' => [
             'label' => 'Logo',
         ],
+        'bank_details' => [
+            'label' => 'Bank Details',
+        ],
     ],
 
     'sections' => [

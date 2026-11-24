@@ -70,7 +70,7 @@ test('fornitura items expose line totals', function () {
     $quotation = Quotation::factory()->create([
         'fornitura_items' => [
             ['description' => 'Pannelli', 'unit' => 'pz', 'quantity' => '10', 'unit_price' => 20],
-            ['description' => 'Posa', 'unit' => 'm', 'unit_price' => 40],
+            ['description' => 'Posa', 'unit' => 'm', 'quantity' => '3', 'unit_price' => 40],
         ],
     ]);
 
@@ -100,4 +100,18 @@ test('quotation status is cast to enum', function () {
     ]);
 
     expect($quotation->status)->toBe(QuotationStatus::Accepted);
+});
+
+test('deposit amount is half of the total', function () {
+    $quotation = Quotation::factory()->create([
+        'fornitura_items' => [
+            ['description' => 'Pannelli', 'unit' => 'pz', 'quantity' => '10', 'unit_price' => 20],
+        ],
+        'installazione_amount' => 0,
+        'trasferta_amount' => 0,
+        'trasporto_amount' => 0,
+    ]);
+
+    expect($quotation->total_amount)->toBe(244.0)
+        ->and($quotation->deposit_amount)->toBe(122.0);
 });

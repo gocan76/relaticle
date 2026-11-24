@@ -46,6 +46,7 @@ use Spatie\Sluggable\SlugOptions;
  * @property string|null $email
  * @property string|null $pec
  * @property string|null $logo
+ * @property string|null $bank_details
  * @property Plan $plan
  * @property ?string $invite_link_token
  * @property ?Carbon $invite_link_token_expires_at
@@ -77,6 +78,7 @@ use Spatie\Sluggable\SlugOptions;
     'email',
     'pec',
     'logo',
+    'bank_details',
     'onboarding_use_case',
     'onboarding_context',
     'onboarding_referral_source',

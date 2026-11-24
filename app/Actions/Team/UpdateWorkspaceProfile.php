@@ -30,6 +30,7 @@ final readonly class UpdateWorkspaceProfile
             'email',
             'pec',
             'logo',
+            'bank_details',
         ]));
 
         return $team;

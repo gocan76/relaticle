@@ -28,6 +28,7 @@
         .recipient .label { font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; color: #6b7280; margin-bottom: 4px; }
         .recipient .name { font-size: 13px; font-weight: bold; line-height: 1.3; }
         .recipient .detail { font-size: 11px; line-height: 1.25; }
+        .payment { margin-bottom: 16px; font-size: 11px; line-height: 1.5; }
     </style>
 </head>
 <body>
@@ -175,6 +176,20 @@
             </tr>
         </tbody>
     </table>
+
+    @if (filled($quotation->payment_name) || filled($quotation->team?->bank_details))
+        <div class="payment">
+            @if (filled($quotation->payment_name))
+                <div><strong>Modalità di pagamento:</strong> {{ $quotation->payment_name }}</div>
+                @if ($quotation->payment_name === \App\Models\Quotation::PAYMENT_METHOD_DEPOSIT_50)
+                    <div><strong>Acconto (50%):</strong> {{ number_format($quotation->deposit_amount, 2) }} &euro;</div>
+                @endif
+            @endif
+            @if (filled($quotation->team?->bank_details))
+                <div><strong>Coordinate bancarie:</strong> {{ $quotation->team->bank_details }}</div>
+            @endif
+        </div>
+    @endif
 
     @if ($quotation->notes)
         <p>{{ $quotation->notes }}</p>

@@ -73,6 +73,7 @@ final class QuotationResource extends Resource
                     Select::make('payment_name')
                         ->label(__('filament/resources/quotation.fields.payment_name.label'))
                         ->options([
+                            Quotation::PAYMENT_METHOD_DEPOSIT_50 => Quotation::PAYMENT_METHOD_DEPOSIT_50,
                             'Bonifico bancario' => 'Bonifico bancario',
                             'Contanti' => 'Contanti',
                             'Rimessa diretta' => 'Rimessa diretta',

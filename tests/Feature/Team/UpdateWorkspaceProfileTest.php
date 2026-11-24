@@ -30,6 +30,7 @@ it('updates the workspace business profile', function (): void {
         'email' => 'info@example.test',
         'pec' => 'pec@example.test',
         'logo' => 'team-logos/logo.png',
+        'bank_details' => 'UNICREDIT IT 57 U 02008 33680 000107478057',
     ];
 
     $team = resolve(UpdateWorkspaceProfile::class)->execute($this->user, $this->team, $data);
@@ -46,7 +47,8 @@ it('updates the workspace business profile', function (): void {
         ->and($team->phone)->toBe('02 1234567')
         ->and($team->email)->toBe('info@example.test')
         ->and($team->pec)->toBe('pec@example.test')
-        ->and($team->logo)->toBe('team-logos/logo.png');
+        ->and($team->logo)->toBe('team-logos/logo.png')
+        ->and($team->bank_details)->toBe('UNICREDIT IT 57 U 02008 33680 000107478057');
 });
 
 it('denies updating another team', function (): void {
@@ -68,6 +70,7 @@ it('renders the workspace business info in the quotation pdf', function (): void
         'phone' => '02 1234567',
         'email' => 'info@casaviva.test',
         'pec' => 'pec@casaviva.test',
+        'bank_details' => 'UNICREDIT IT 57 U 02008 33680 000107478057',
     ]);
 
     $company = Company::factory()->create([
@@ -85,6 +88,13 @@ it('renders the workspace business info in the quotation pdf', function (): void
         'team_id' => $this->team->getKey(),
         'company_id' => $company->getKey(),
         'number' => 'Q-0001',
+        'payment_name' => Quotation::PAYMENT_METHOD_DEPOSIT_50,
+        'fornitura_items' => [
+            ['description' => 'Pannelli', 'unit' => 'pz', 'quantity' => '10', 'unit_price' => 20],
+        ],
+        'installazione_amount' => 0,
+        'trasferta_amount' => 0,
+        'trasporto_amount' => 0,
     ]);
 
     $html = view('pdf.quotation', [
@@ -107,5 +117,11 @@ it('renders the workspace business info in the quotation pdf', function (): void
         ->toContain('Via per Santa Vittoria 5')
         ->toContain('16039 Sestri Levante (GE)')
         ->toContain('Italia')
-        ->toContain('P.Iva 00209560994');
+        ->toContain('P.Iva 00209560994')
+        ->toContain('Modalità di pagamento:')
+        ->toContain('Acconto 50% alla conferma - saldo alla consegna B.B.')
+        ->toContain('Acconto (50%):')
+        ->toContain('122.00')
+        ->toContain('Coordinate bancarie:')
+        ->toContain('UNICREDIT IT 57 U 02008 33680 000107478057');
 });
